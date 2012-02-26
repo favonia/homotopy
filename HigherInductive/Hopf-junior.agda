@@ -10,7 +10,7 @@
 -- {-# OPTIONS --without-K #-}
 
 -- Credits:
---  * Chris Kapulkin gave the construction of the Hopf (junior)
+--  * Peter Lumsdaine gave the construction of the Hopf (junior)
 --  * Danial Licata gave the outline of almost all interesting parts
 
 open import Prelude
