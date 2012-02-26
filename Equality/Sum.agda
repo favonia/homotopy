@@ -5,7 +5,7 @@
 {-# OPTIONS --without-K #-}
 
 -- The public interface includes
---  * A bijection between ((a₁ , b₁) ≡ (a₂ , b₂))
+--  * A bijection between (a₁ , b₁) ≡ (a₂ , b₂)
 --    and Σ (a₁ ≡ a₂) (λ p → subst B p b₁ ≡ b₂)
 
 open import Prelude
