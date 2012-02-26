@@ -106,7 +106,7 @@ private
   subst-C-loop : ∀ x → subst C loop x ≡ suc x
   subst-C-loop x =
     subst C loop x              ≡⟨ sym $ subst-id-cong C loop x ⟩
-    subst id (cong C loop) x    ≡⟨ cong (λ p → subst id p x) $ S¹-βloop[simp] ℤ suc-≡ ⟩
+    subst id (cong C loop) x    ≡⟨ cong (λ p → subst id p x) $ cong-S¹-rec[simp]-loop ℤ suc-≡ ⟩
     subst id suc-≡ x            ≡⟨ subst-id-≡ suc-≡ x ⟩
     _≈_.to (≡⇒≈ suc-≡) x        ≡⟨ cong (λ weq → _≈_.to weq x) $ univ-right-inverse-of suc-≈ ⟩
     _≈_.to suc-≈ x              ≡⟨ refl (suc x) ⟩∎
