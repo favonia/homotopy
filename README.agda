@@ -4,9 +4,11 @@
 -- Favonia
 ------------------------------------------------------------------------
 
+-- Copyright (c) 2012 Favonia
+
 {-# OPTIONS --without-K #-}
 
--- The whole codebase assumes the access to
--- http://www.cse.chalmers.se/~nad/repos/equality/
-
 module README where
+
+-- I gave up equalities with propositional computation rule and
+-- departed from Nils' library since then.
