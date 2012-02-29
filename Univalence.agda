@@ -7,8 +7,7 @@
 
 {-# OPTIONS --without-K #-}
 
--- Partly based on Voevodsky's work on so-called univalent
--- foundations.
+-- Partly based on Voevodsky's work on univalent foundations.
 
 module Univalence where
 
