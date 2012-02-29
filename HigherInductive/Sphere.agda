@@ -34,26 +34,23 @@ abstract
   loop = refl base′
 
 ------------------------------------------------------------------------
--- Elimination rules
+-- Elimination rules and computation rules
 
 -- Dependent version
+
 S¹-rec : ∀ {ℓ} (P : S¹ → Set ℓ) (dbase : P base) → subst P loop dbase ≡ dbase → (x : S¹) → P x
 S¹-rec _ dbase _ base′ = dbase
 
--- Non-dependent version
-S¹-rec[simp] : ∀ {ℓ} {P : Set ℓ} (dbase : P) → dbase ≡ dbase → S¹ → P
-S¹-rec[simp] {P = P} dbase dloop = S¹-rec (const P) dbase (trans (subst-const loop dbase) dloop)
-
-------------------------------------------------------------------------
--- Computation rules
-
--- Dependent version
 -- This is actually definitionally equality...
 postulate
   cong[dep]-S¹-rec-loop : ∀ {ℓ} (P : S¹ → Set ℓ) (dbase : P base) (dloop : subst P loop dbase ≡ dbase)
                           → cong[dep] P (S¹-rec P dbase dloop) loop ≡ dloop
 
 -- Non-dependent version
+
+S¹-rec[simp] : ∀ {ℓ} {P : Set ℓ} (dbase : P) → dbase ≡ dbase → S¹ → P
+S¹-rec[simp] {P = P} dbase dloop = S¹-rec (const P) dbase (trans (subst-const loop dbase) dloop)
+
 -- The propositional equality is derivable from the dependent version.
 cong-S¹-rec[simp]-loop : ∀ {ℓ} {P : Set ℓ} (dbase : P) (dloop : dbase ≡ dbase)
                          → cong (S¹-rec[simp] dbase dloop) loop ≡ dloop
