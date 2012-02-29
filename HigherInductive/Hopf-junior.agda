@@ -66,6 +66,7 @@ Hj = S¹-rec[simp] Bool not-≡
 -- A map from S¹ to the total space of Hopf junior fibration
 
 private
+  -- For some magical reasons this will speed up the checking!
   abstract
     -- "subst Hj loop" is "not"
     subst-Hj-loop : ∀ (x : Bool) → subst Hj loop x ≡ not x
@@ -74,7 +75,7 @@ private
       subst id (cong Hj loop) x   ≡⟨ cong (λ p → subst id p x) $ cong-S¹-rec[simp]-loop Bool not-≡ ⟩
       subst id not-≡ x            ≡⟨ subst-id-univ not-≡ x ⟩
       _≈_.to (≡⇒≈ not-≡) x        ≡⟨ cong (λ weq → _≈_.to weq x) $ right-inverse-of not-≈ ⟩∎
---    to not-≈ x                  ≡⟨ refl (not x) ⟩∎
+      -- to not-≈ x               ≡⟨ refl (not x) ⟩∎
       not x                       ∎
       where
         open _≈_ (≡≈≈ Bool Bool)
@@ -145,102 +146,99 @@ private
 -- Sorry for the ugly proof.
 
 private
-  abstract
-    -- This lemma is the most interesting (difficult) one!
-    cong-halve-double-path : ∀ b → cong halve (Σ≡⇒≡Σ Hj (loop , subst-Hj-loop b)) ≡ halve′-loop′ (not b)
-    cong-halve-double-path true =
-      cong halve (Σ≡⇒≡Σ Hj (loop , subst-Hj-loop true))
-        ≡⟨ cong-Σ≡⇒≡Σ Hj S¹ halve′ loop (subst-Hj-loop true) ⟩
-              (base                                                     ≡⟨ line₁ ⟩
-               subst (const S¹) loop base                               ≡⟨ line₂ ⟩
-               subst (λ x → Hj x → S¹) loop halve′-base false           ≡⟨ line₃ ⟩∎
-               base                                                     ∎)
-        ≡⟨ refl _ ⟩
-            trans line₁ (trans line₂ line₃)
-        ≡⟨ cong (trans line₁ ∘ trans line₂) $ lemma₃ ⟩
-            trans line₁ (trans line₂ (trans line₃′|₁ line₃′|₂))
-        ≡⟨ cong (trans line₁) $ trans-transʳ-sym line₂ line₃′|₂ ⟩
-            trans line₁ line₃′|₂
-        ≡⟨ trans-symˡ line₃′|₂ ⟩∎
-            refl _
-        ∎
-      where
-        line₁ : base ≡ subst (const S¹) loop base 
-        line₁ = sym $ subst-const loop base 
-        line₂ : subst (const S¹) loop base ≡ subst (λ x → Hj x → S¹) loop halve′-base false
-        line₂ = subst-app Hj (const S¹) loop halve′-base (subst-Hj-loop true)
-        line₃ : subst (λ x → Hj x → S¹) loop halve′-base false ≡ base
-        line₃ = cong (λ f′ → f′ false) $ cong[dep] (λ x → Hj x → S¹) halve′ loop
-  
-        line₃′|₁ : subst (λ (x : S¹) → Hj x → S¹) loop halve′-base false ≡ subst (const S¹) loop base
-        line₃′|₁ = sym $ subst-app Hj (const S¹) loop halve′-base (subst-Hj-loop true) 
-        line₃′|₂ : subst (const S¹) loop base ≡ base
-        line₃′|₂ = subst-const loop base
+  -- This lemma is the most interesting (difficult) one!
+  cong-halve-double-path : ∀ b → cong halve (Σ≡⇒≡Σ Hj (loop , subst-Hj-loop b)) ≡ halve′-loop′ (not b)
+  cong-halve-double-path true =
+    cong halve (Σ≡⇒≡Σ Hj (loop , subst-Hj-loop true))
+      ≡⟨ cong-Σ≡⇒≡Σ Hj S¹ halve′ loop (subst-Hj-loop true) ⟩
+            (base                                                     ≡⟨ line₁ ⟩
+             subst (const S¹) loop base                               ≡⟨ line₂ ⟩
+             subst (λ x → Hj x → S¹) loop halve′-base false           ≡⟨ line₃ ⟩∎
+             base                                                     ∎)
+      ≡⟨ refl _ ⟩
+          trans line₁ (trans line₂ line₃)
+      ≡⟨ cong (trans line₁ ∘ trans line₂) $ lemma₃ ⟩
+          trans line₁ (trans line₂ (trans line₃′|₁ line₃′|₂))
+      ≡⟨ cong (trans line₁) $ trans-transʳ-sym line₂ line₃′|₂ ⟩
+          trans line₁ line₃′|₂
+      ≡⟨ trans-symˡ line₃′|₂ ⟩∎
+          refl _
+      ∎
+    where
+      line₁ : base ≡ subst (const S¹) loop base 
+      line₁ = sym $ subst-const loop base 
+      line₂ : subst (const S¹) loop base ≡ subst (λ x → Hj x → S¹) loop halve′-base false
+      line₂ = subst-app Hj (const S¹) loop halve′-base (subst-Hj-loop true)
+      line₃ : subst (λ x → Hj x → S¹) loop halve′-base false ≡ base
+      line₃ = cong (λ f′ → f′ false) $ cong[dep] (λ x → Hj x → S¹) halve′ loop
 
-        abstract
-          lemma₃ : line₃ ≡ trans line₃′|₁ line₃′|₂
-          lemma₃ =
-            line₃
-                ≡⟨ cong (cong (λ f → f false)) $ cong[dep]-S¹-rec-loop (λ x → Hj x → S¹) halve′-base _ ⟩
-            cong (λ f → f false) (trans halve′-boring-loop halve′-loop)
-                ≡⟨ cong-trans (λ f → f false) halve′-boring-loop halve′-loop ⟩
-            trans (cong (λ f → f false) halve′-boring-loop) (cong (λ f → f false) halve′-loop)
-                ≡⟨ cong (trans $ cong (λ f → f false) halve′-boring-loop) $ ext-elim halve′-loop′ false ⟩
-            trans (cong (λ f → f false) halve′-boring-loop) (halve′-loop′ false)
-                ≡⟨ trans-reflʳ $ cong (λ f → f false) halve′-boring-loop ⟩
-            cong (λ f → f false) halve′-boring-loop
-                ≡⟨ ext-elim halve′-boring-loop′ false ⟩
-            halve′-boring-loop′ false
-                ≡⟨ refl _ ⟩∎
-            trans line₃′|₁ line₃′|₂
-                ∎
+      line₃′|₁ : subst (λ (x : S¹) → Hj x → S¹) loop halve′-base false ≡ subst (const S¹) loop base
+      line₃′|₁ = sym $ subst-app Hj (const S¹) loop halve′-base (subst-Hj-loop true) 
+      line₃′|₂ : subst (const S¹) loop base ≡ base
+      line₃′|₂ = subst-const loop base
+
+      lemma₃ : line₃ ≡ trans line₃′|₁ line₃′|₂
+      lemma₃ =
+        line₃
+            ≡⟨ cong (cong (λ f → f false)) $ cong[dep]-S¹-rec-loop (λ x → Hj x → S¹) halve′-base _ ⟩
+        cong (λ f → f false) (trans halve′-boring-loop halve′-loop)
+            ≡⟨ cong-trans (λ f → f false) halve′-boring-loop halve′-loop ⟩
+        trans (cong (λ f → f false) halve′-boring-loop) (cong (λ f → f false) halve′-loop)
+            ≡⟨ cong (trans $ cong (λ f → f false) halve′-boring-loop) $ ext-elim halve′-loop′ false ⟩
+        trans (cong (λ f → f false) halve′-boring-loop) (halve′-loop′ false)
+            ≡⟨ trans-reflʳ $ cong (λ f → f false) halve′-boring-loop ⟩
+        cong (λ f → f false) halve′-boring-loop
+            ≡⟨ ext-elim halve′-boring-loop′ false ⟩
+        halve′-boring-loop′ false
+            ≡⟨ refl _ ⟩∎
+        trans line₃′|₁ line₃′|₂
+            ∎
  
-    cong-halve-double-path false =
-      cong halve (Σ≡⇒≡Σ Hj (loop , subst-Hj-loop false))
-        ≡⟨ cong-Σ≡⇒≡Σ Hj S¹ halve′ loop (subst-Hj-loop false) ⟩
-              (base                                                     ≡⟨ line₁ ⟩
-               subst (const S¹) loop base                               ≡⟨ line₂ ⟩
-               subst (λ x → Hj x → S¹) loop halve′-base true            ≡⟨ line₃ ⟩∎
-               base                                                     ∎)
-        ≡⟨ refl _ ⟩
-            trans line₁ (trans line₂ line₃)
-        ≡⟨ cong (trans line₁ ∘ trans line₂) $ lemma₃ ⟩
-            trans line₁ (trans line₂ (trans line₃′|₁ (trans line₃′|₂ loop)))
-        ≡⟨ cong (trans line₁) $ trans-transʳ-sym line₂ (trans line₃′|₂ loop) ⟩
-            trans line₁ (trans line₃′|₂ loop)
-        ≡⟨ trans-sym-trans line₃′|₂ loop ⟩∎
-            loop
-        ∎
-      where
-        line₁ : base ≡ subst (const S¹) loop base 
-        line₁ = sym $ subst-const loop base 
-        line₂ : subst (const S¹) loop base ≡ subst (λ x → Hj x → S¹) loop halve′-base true
-        line₂ = subst-app Hj (const S¹) loop halve′-base (subst-Hj-loop false)
-        line₃ : subst (λ x → Hj x → S¹) loop halve′-base true ≡ base
-        line₃ = cong (λ f′ → f′ true) $ cong[dep] (λ x → Hj x → S¹) halve′ loop
-  
-        line₃′|₁ : subst (λ (x : S¹) → Hj x → S¹) loop halve′-base true ≡ subst (const S¹) loop base
-        line₃′|₁ = sym $ subst-app Hj (const S¹) loop halve′-base (subst-Hj-loop false)
-        line₃′|₂ : subst (const S¹) loop base ≡ base
-        line₃′|₂ = subst-const loop base
-  
-        abstract
-          lemma₃ : line₃ ≡ trans line₃′|₁ (trans line₃′|₂ loop)
-          lemma₃ =
-            line₃
-                ≡⟨ cong (cong (λ f → f true)) $ cong[dep]-S¹-rec-loop (λ x → Hj x → S¹) halve′-base _ ⟩
-            cong (λ f → f true) (trans halve′-boring-loop halve′-loop)
-                ≡⟨ cong-trans (λ f → f true) halve′-boring-loop halve′-loop ⟩
-            trans (cong (λ f → f true) halve′-boring-loop) (cong (λ f → f true) halve′-loop)
-                ≡⟨ cong (trans $ cong (λ f → f true) halve′-boring-loop) $ ext-elim halve′-loop′ true ⟩
-            trans (cong (λ f → f true) halve′-boring-loop) (halve′-loop′ true)
-                ≡⟨ refl _ ⟩
-            trans (cong (λ f → f true) halve′-boring-loop) loop
-                ≡⟨ cong (λ p → trans p loop) $ ext-elim halve′-boring-loop′ true ⟩
-            trans (halve′-boring-loop′ true) loop
-                ≡⟨ trans-assoc line₃′|₁ line₃′|₂ loop ⟩∎
-            trans line₃′|₁ (trans line₃′|₂ loop)
-                ∎
+  cong-halve-double-path false =
+    cong halve (Σ≡⇒≡Σ Hj (loop , subst-Hj-loop false))
+      ≡⟨ cong-Σ≡⇒≡Σ Hj S¹ halve′ loop (subst-Hj-loop false) ⟩
+            (base                                                     ≡⟨ line₁ ⟩
+             subst (const S¹) loop base                               ≡⟨ line₂ ⟩
+             subst (λ x → Hj x → S¹) loop halve′-base true            ≡⟨ line₃ ⟩∎
+             base                                                     ∎)
+      ≡⟨ refl _ ⟩
+          trans line₁ (trans line₂ line₃)
+      ≡⟨ cong (trans line₁ ∘ trans line₂) $ lemma₃ ⟩
+          trans line₁ (trans line₂ (trans line₃′|₁ (trans line₃′|₂ loop)))
+      ≡⟨ cong (trans line₁) $ trans-transʳ-sym line₂ (trans line₃′|₂ loop) ⟩
+          trans line₁ (trans line₃′|₂ loop)
+      ≡⟨ trans-sym-trans line₃′|₂ loop ⟩∎
+          loop
+      ∎
+    where
+      line₁ : base ≡ subst (const S¹) loop base 
+      line₁ = sym $ subst-const loop base 
+      line₂ : subst (const S¹) loop base ≡ subst (λ x → Hj x → S¹) loop halve′-base true
+      line₂ = subst-app Hj (const S¹) loop halve′-base (subst-Hj-loop false)
+      line₃ : subst (λ x → Hj x → S¹) loop halve′-base true ≡ base
+      line₃ = cong (λ f′ → f′ true) $ cong[dep] (λ x → Hj x → S¹) halve′ loop
+
+      line₃′|₁ : subst (λ (x : S¹) → Hj x → S¹) loop halve′-base true ≡ subst (const S¹) loop base
+      line₃′|₁ = sym $ subst-app Hj (const S¹) loop halve′-base (subst-Hj-loop false)
+      line₃′|₂ : subst (const S¹) loop base ≡ base
+      line₃′|₂ = subst-const loop base
+
+      lemma₃ : line₃ ≡ trans line₃′|₁ (trans line₃′|₂ loop)
+      lemma₃ =
+        line₃
+            ≡⟨ cong (cong (λ f → f true)) $ cong[dep]-S¹-rec-loop (λ x → Hj x → S¹) halve′-base _ ⟩
+        cong (λ f → f true) (trans halve′-boring-loop halve′-loop)
+            ≡⟨ cong-trans (λ f → f true) halve′-boring-loop halve′-loop ⟩
+        trans (cong (λ f → f true) halve′-boring-loop) (cong (λ f → f true) halve′-loop)
+            ≡⟨ cong (trans $ cong (λ f → f true) halve′-boring-loop) $ ext-elim halve′-loop′ true ⟩
+        trans (cong (λ f → f true) halve′-boring-loop) (halve′-loop′ true)
+            ≡⟨ refl _ ⟩
+        trans (cong (λ f → f true) halve′-boring-loop) loop
+            ≡⟨ cong (λ p → trans p loop) $ ext-elim halve′-boring-loop′ true ⟩
+        trans (halve′-boring-loop′ true) loop
+            ≡⟨ trans-assoc line₃′|₁ line₃′|₂ loop ⟩∎
+        trans line₃′|₁ (trans line₃′|₂ loop)
+            ∎
 
 private
   cong-halve-double-loop : cong halve double-loop ≡ loop
