@@ -21,7 +21,7 @@ open import Prelude
 open import Weak-equivalence hiding (_∘_; id)
 
 ------------------------------------------------------------------------
--- Non-dependent extensionality for functions of a certain type.
+-- Extensionality for functions of a certain type.
 
 Extensionality : ∀ {ℓ₁ ℓ₂} → Set ℓ₁ → Set ℓ₂ → Set (ℓ₁ ⊔ ℓ₂)
 Extensionality A B = {f g : A → B} → (∀ x → f x ≡ g x) → f ≡ g
@@ -30,7 +30,7 @@ Extensionality[dep] : ∀ {ℓ₁ ℓ₂} (A : Set ℓ₁) → (A → Set ℓ₂
 Extensionality[dep] A B = {f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g
 
 ------------------------------------------------------------------------
--- A consequence: extensionality for functions
+-- Extensionality for functions
 
 postulate
   ext : ∀ {ℓ₁ ℓ₂} {A : Set ℓ₁} {B : Set ℓ₂} → Extensionality A B
