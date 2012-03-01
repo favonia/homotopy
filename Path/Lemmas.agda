@@ -193,7 +193,7 @@ subst-cong C f =
 
 subst-app : ∀ {ℓ₁ ℓ₂ ℓ₃} {A : Set ℓ₁} (B : A → Set ℓ₂) (C : A → Set ℓ₃)
             {x y : A} (p : x ≡ y) (f : B x → C x) {bx : B x} {by : B y} (q : subst B p bx ≡ by) →
-            subst C p (f bx) ≡ (subst (λ x → B x → C x) p f) by
+            subst C p (f bx) ≡ subst (λ x → B x → C x) p f by
 subst-app {A = A} B C =
     elim
       (λ {x y} p → (f : B x → C x) {bx : B x} {by : B y} (q : subst B p bx ≡ by) →

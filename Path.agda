@@ -15,16 +15,16 @@ open import Prelude
 -- Formation and introduction
 
 private
-  data path′ {ℓ} {A : Set ℓ} (x : A) : A → Set ℓ where
-    refl′ : path′ x x
+  data Path′ {ℓ} {A : Set ℓ} (x : A) : A → Set ℓ where
+    refl′ : Path′ x x
 
 infix 4 _≡_
 
 _≡_ : ∀ {ℓ} {A : Set ℓ} (x : A) → A → Set ℓ
-_≡_ = path′
+_≡_ = Path′
 
-path : ∀ {ℓ} {A : Set ℓ} (x : A) → A → Set ℓ
-path = path′
+Path : ∀ {ℓ} {A : Set ℓ} (x : A) → A → Set ℓ
+Path = Path′
 
 refl : ∀ {ℓ} {A : Set ℓ} (x : A) → x ≡ x
 refl _ = refl′
@@ -33,13 +33,27 @@ refl _ = refl′
 -- Elimination and computation
 
 -- I think dependent pattern matching is fine, because it seems that
--- with univalence we can construct another equality with constructors
--- exposed and show two equalities are equal.
+-- we can construct another equality with its destructor exposed and
+-- show two equalities are equivalent. However the destructor is still
+-- hidden so that people need to write elim explicitly (at least for
+-- this datatype).
 
 elim : ∀ {ℓ₁ ℓ₂} {A : Set ℓ₁} (P : {x y : A} → x ≡ y → Set ℓ₂) →
        (∀ x → P (refl x)) →
        ∀ {x y} (x≡y : x ≡ y) → P x≡y
 elim P r refl′ = r _
+
+------------------------------------------------------------------------
+-- Alternative elimination/computation rule
+
+elim′ : ∀ {ℓ₁ ℓ₂} {A : Set ℓ₁} {x : A} (P : {y : A} → x ≡ y → Set ℓ₂) →
+        P (refl x) → ∀ {y} (x≡y : x ≡ y) → P x≡y
+-- elim′ P r refl′ = r
+elim′ {ℓ₂ = ℓ₂} {A = A} P r p =
+  elim
+    (λ {x y} p → (P : {y : A} → x ≡ y → Set ℓ₂) → P (refl x) → P p)
+    (λ x P r → r)
+    p P r
 
 ------------------------------------------------------------------------
 -- Congruence (respect or map) and substitutivity (tranport)

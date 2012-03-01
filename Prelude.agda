@@ -104,16 +104,6 @@ zero  + n = n
 suc m + n = suc (m + n)
 
 ------------------------------------------------------------------------
--- Integers
-
--- Note that ⟦ pos n ⟧ = n + 1 and ⟦ neg n ⟧ = - (n + 1)
-
-data ℤ : Set where
-  ℤpos : ℕ → ℤ
-  ℤneg : ℕ → ℤ
-  ℤzero : ℤ
-
-------------------------------------------------------------------------
 -- Simple combinators working solely on and with functions
 
 infixr 9 _∘_

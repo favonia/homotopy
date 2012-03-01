@@ -33,7 +33,7 @@ import Univalence.Extensionality; open Univalence.Extensionality univ
 open import HigherInductive.Sphere
 
 ------------------------------------------------------------------------
--- Construction: apply S¹-rec to a non-trivial bijection in S⁰
+-- Construction: apply S¹-elim to a non-trivial bijection in S⁰
 
 private
   not-not : ∀ x → not (not x) ≡ x
@@ -60,7 +60,7 @@ private
 
 -- Here's the Hopf junior
 Hj : S¹ → Set
-Hj = S¹-rec[simp] Bool not-≡
+Hj = S¹-elim[simp] Bool not-≡
 
 ------------------------------------------------------------------------
 -- A map from S¹ to the total space of Hopf junior fibration
@@ -72,7 +72,7 @@ private
     subst-Hj-loop : ∀ (x : Bool) → subst Hj loop x ≡ not x
     subst-Hj-loop x =
       subst Hj loop x             ≡⟨ sym $ subst-id-cong Hj loop x ⟩
-      subst id (cong Hj loop) x   ≡⟨ cong (λ p → subst id p x) $ cong-S¹-rec[simp]-loop Bool not-≡ ⟩
+      subst id (cong Hj loop) x   ≡⟨ cong (λ p → subst id p x) $ cong-S¹-elim[simp]-loop Bool not-≡ ⟩
       subst id not-≡ x            ≡⟨ subst-id-univ not-≡ x ⟩
       _≈_.to (≡⇒≈ not-≡) x        ≡⟨ cong (λ weq → _≈_.to weq x) $ right-inverse-of not-≈ ⟩∎
       -- to not-≈ x               ≡⟨ refl (not x) ⟩∎
@@ -80,36 +80,46 @@ private
       where
         open _≈_ (≡≈≈ Bool Bool)
 
+  -- (base , true)
+  -- These are used to fill in implicit arguments in declarations
   double-base-true : Σ S¹ Hj
   double-base-true = (base , true)
 
+  -- (base , false)
+  -- These are used to fill in implicit arguments in declarations
   double-base-false : Σ S¹ Hj
   double-base-false = (base , false)
 
+  -- (base , true) ~~> (base , false)
   double-path-true→false : double-base-true ≡ double-base-false
   double-path-true→false = Σ≡⇒≡Σ Hj (loop , subst-Hj-loop true )
 
+  -- (base , false) ~~> (base , true)
   double-path-false→true : double-base-false ≡ double-base-true
   double-path-false→true = Σ≡⇒≡Σ Hj (loop , subst-Hj-loop false )
-  
+
+  -- The base 
   double-base : Σ S¹ Hj
   double-base = double-base-true
 
+  -- The loop
   double-loop : double-base ≡ double-base
   double-loop = trans double-path-true→false double-path-false→true
 
-  -- the map
+  -- The map
   double : S¹ → Σ S¹ Hj
-  double = S¹-rec[simp] double-base double-loop
+  double = S¹-elim[simp] double-base double-loop
 
 ------------------------------------------------------------------------
 -- A map from the total space to S¹
 
 private
+  -- The base
   halve′-base : Bool → S¹
   halve′-base _ = base
 
-  -- the interesting loop
+  -- The interesting loop
+  -- (Actually the most interesting part in the construction!)
   halve′-loop′ : ∀ x → halve′-base x ≡ halve′-base x
   halve′-loop′ true = loop
   halve′-loop′ false = refl base
@@ -117,7 +127,7 @@ private
   halve′-loop : halve′-base ≡ halve′-base
   halve′-loop = ext halve′-loop′
 
-  -- the boring loop
+  -- The boring loop to transport the base
   halve′-boring-loop′ : ∀ x → subst (λ (x : S¹) → Hj x → S¹) loop halve′-base x ≡ halve′-base x
   halve′-boring-loop′ true =
       subst (λ (x : S¹) → Hj x → S¹) loop halve′-base true          ≡⟨ sym $ subst-app Hj (const S¹) loop halve′-base (subst-Hj-loop false) ⟩
@@ -133,23 +143,32 @@ private
   halve′-boring-loop : subst (λ (x : S¹) → Hj x → S¹) loop halve′-base ≡ halve′-base
   halve′-boring-loop = ext halve′-boring-loop′
 
+  -- The curried version of the map
   halve′ : (x : S¹) → Hj x → S¹
-  halve′ = S¹-rec (λ x → Hj x → S¹) halve′-base (trans halve′-boring-loop halve′-loop)
+  halve′ = S¹-elim (λ x → Hj x → S¹) halve′-base (trans halve′-boring-loop halve′-loop)
 
-  -- the map
+  -- The map
   halve : Σ S¹ Hj → S¹
   halve = uncurry halve′
 
 ------------------------------------------------------------------------
 -- Bijection
 
--- Sorry for the ugly proof.
-
 private
   -- This lemma is the most interesting (difficult) one!
+  -- (Sorry for the ugly proof.)
+  --
+  -- It is possible to prove both cases (true & false) at once,
+  -- but one need to apply "not not b ≡ b" at several places.
+  -- However in any specific case they are definitionally equal!
+  -- For anyone interested in this approach, you might want to
+  -- redefine "halve′-boring-loop′" so that it does not contain
+  -- a hidden Bool-elim.
+
   cong-halve-double-path : ∀ b → cong halve (Σ≡⇒≡Σ Hj (loop , subst-Hj-loop b)) ≡ halve′-loop′ (not b)
   cong-halve-double-path true =
     cong halve (Σ≡⇒≡Σ Hj (loop , subst-Hj-loop true))
+      -- This pulled out the proof term
       ≡⟨ cong-Σ≡⇒≡Σ Hj S¹ halve′ loop (subst-Hj-loop true) ⟩
             (base                                                     ≡⟨ line₁ ⟩
              subst (const S¹) loop base                               ≡⟨ line₂ ⟩
@@ -180,7 +199,7 @@ private
       lemma₃ : line₃ ≡ trans line₃′|₁ line₃′|₂
       lemma₃ =
         line₃
-            ≡⟨ cong (cong (λ f → f false)) $ cong[dep]-S¹-rec-loop (λ x → Hj x → S¹) halve′-base _ ⟩
+            ≡⟨ cong (cong (λ f → f false)) $ cong[dep]-S¹-elim-loop (λ x → Hj x → S¹) halve′-base _ ⟩
         cong (λ f → f false) (trans halve′-boring-loop halve′-loop)
             ≡⟨ cong-trans (λ f → f false) halve′-boring-loop halve′-loop ⟩
         trans (cong (λ f → f false) halve′-boring-loop) (cong (λ f → f false) halve′-loop)
@@ -196,6 +215,7 @@ private
  
   cong-halve-double-path false =
     cong halve (Σ≡⇒≡Σ Hj (loop , subst-Hj-loop false))
+      -- This pulled out the proof term
       ≡⟨ cong-Σ≡⇒≡Σ Hj S¹ halve′ loop (subst-Hj-loop false) ⟩
             (base                                                     ≡⟨ line₁ ⟩
              subst (const S¹) loop base                               ≡⟨ line₂ ⟩
@@ -226,7 +246,7 @@ private
       lemma₃ : line₃ ≡ trans line₃′|₁ (trans line₃′|₂ loop)
       lemma₃ =
         line₃
-            ≡⟨ cong (cong (λ f → f true)) $ cong[dep]-S¹-rec-loop (λ x → Hj x → S¹) halve′-base _ ⟩
+            ≡⟨ cong (cong (λ f → f true)) $ cong[dep]-S¹-elim-loop (λ x → Hj x → S¹) halve′-base _ ⟩
         cong (λ f → f true) (trans halve′-boring-loop halve′-loop)
             ≡⟨ cong-trans (λ f → f true) halve′-boring-loop halve′-loop ⟩
         trans (cong (λ f → f true) halve′-boring-loop) (cong (λ f → f true) halve′-loop)
@@ -253,7 +273,7 @@ private
           ∎
   
   cong-double-loop : cong double loop ≡ double-loop
-  cong-double-loop = cong-S¹-rec[simp]-loop double-base double-loop
+  cong-double-loop = cong-S¹-elim[simp]-loop double-base double-loop
 
 S¹↔ΣS¹Hj : S¹ ↔ Σ S¹ Hj
 S¹↔ΣS¹Hj =
@@ -269,7 +289,7 @@ S¹↔ΣS¹Hj =
   }
   where
     left-inverse-of : ∀ x → halve (double x) ≡ x
-    left-inverse-of = S¹-rec (λ x → halve (double x) ≡ x) (refl base) ≡-loop
+    left-inverse-of = S¹-elim (λ x → halve (double x) ≡ x) (refl base) ≡-loop
       where
         ≡-loop : subst (λ x → halve (double x) ≡ x) loop (refl base) ≡ refl base
         ≡-loop =
@@ -281,46 +301,46 @@ S¹↔ΣS¹Hj =
           refl base                                                 ∎
 
     right-inverse-of : ∀ s → double (halve s) ≡ s
-    right-inverse-of = uncurry left-inverse-of′
+    right-inverse-of = uncurry right-inverse-of′
       where
-        ≡-base : ∀ b → double (halve (base , b)) ≡ (base , b)
-        ≡-base true = refl _
-        ≡-base false = double-path-true→false
+        right-inverse-of′ = S¹-elim (λ x → (y : Hj x) → double (halve (x , y)) ≡ (x , y)) ≡-base ≡-loop
+          where
+            ≡-base : ∀ b → double (halve (base , b)) ≡ (base , b)
+            ≡-base true = refl _ -- (base , true) ~~> (base , true)
+            ≡-base false = double-path-true→false -- (base , true) ~~> (base , false)
+    
+            ≡-loop′ : ∀ b → subst (λ x → (y : Hj x) → double (halve (x , y)) ≡ (x , y)) loop ≡-base b ≡ ≡-base b
+    
+            -- (base , false) ~~> (base , true)
+            ≡-loop′ true =
+              subst (λ x → (y : Hj x) → double (halve (x , y)) ≡ (x , y)) loop ≡-base true
+                  ≡⟨ subst-Σfunc Hj (λ s → double (halve s) ≡ s) loop ≡-base (subst-Hj-loop false) ⟩
+              subst (λ s → double (halve s) ≡ s) double-path-false→true double-path-true→false
+                  ≡⟨ subst-path[id] (double ∘ halve) double-path-false→true double-path-true→false ⟩
+              trans (sym (cong (double ∘ halve) double-path-false→true)) double-loop
+                  ≡⟨ cong (λ p → trans (sym p) double-loop) $ sym $ cong-cong double halve double-path-false→true ⟩
+              trans (sym (cong double $ cong halve double-path-false→true)) double-loop
+                  ≡⟨ cong (λ p → trans (sym (cong double $ p)) double-loop) $ cong-halve-double-path false ⟩
+              trans (sym (cong double loop)) double-loop
+                  ≡⟨ cong (λ p → trans (sym p) double-loop) cong-double-loop ⟩
+              trans (sym double-loop) double-loop
+                  ≡⟨ trans-symˡ double-loop ⟩∎
+              refl _
+                  ∎
+    
+            -- (base , true) ~~> (base , false)
+            ≡-loop′ false =
+              subst (λ x → (y : Hj x) → double (halve (x , y)) ≡ (x , y)) loop ≡-base false
+                  ≡⟨ subst-Σfunc Hj (λ s → double (halve s) ≡ s) loop ≡-base (subst-Hj-loop true) ⟩
+              subst (λ s → double (halve s) ≡ s) double-path-true→false (refl _)
+                  ≡⟨ subst-path[id] (double ∘ halve) double-path-true→false (refl _) ⟩
+              trans (sym (cong (double ∘ halve) double-path-true→false)) double-path-true→false
+                  ≡⟨ cong (λ p → trans (sym p) double-path-true→false) $ sym $ cong-cong double halve double-path-true→false ⟩
+              trans (sym (cong double $ cong halve double-path-true→false)) double-path-true→false
+                  ≡⟨ cong (λ p → trans (sym (cong double $ p)) double-path-true→false) $ cong-halve-double-path true ⟩∎
+              double-path-true→false
+                  ∎
+    
+            ≡-loop : subst (λ x → (y : Hj x) → double (halve (x , y)) ≡ (x , y)) loop ≡-base ≡ ≡-base
+            ≡-loop = ext[dep] ≡-loop′
 
-        ≡-loop′ : ∀ b → subst (λ x → (y : Hj x) → double (halve (x , y)) ≡ (x , y)) loop ≡-base b ≡ ≡-base b
-
-        -- false → true
-        ≡-loop′ true =
-          subst (λ x → (y : Hj x) → double (halve (x , y)) ≡ (x , y)) loop ≡-base true
-              ≡⟨ subst-Σfunc Hj (λ s → double (halve s) ≡ s) loop ≡-base (subst-Hj-loop false) ⟩
-          subst (λ s → double (halve s) ≡ s) double-path-false→true double-path-true→false
-              ≡⟨ subst-path[id] (double ∘ halve) double-path-false→true double-path-true→false ⟩
-          trans (sym (cong (double ∘ halve) double-path-false→true)) double-loop
-              ≡⟨ cong (λ p → trans (sym p) double-loop) $ sym $ cong-cong double halve double-path-false→true ⟩
-          trans (sym (cong double $ cong halve double-path-false→true)) double-loop
-              ≡⟨ cong (λ p → trans (sym (cong double $ p)) double-loop) $ cong-halve-double-path false ⟩
-          trans (sym (cong double loop)) double-loop
-              ≡⟨ cong (λ p → trans (sym p) double-loop) cong-double-loop ⟩
-          trans (sym double-loop) double-loop
-              ≡⟨ trans-symˡ double-loop ⟩∎
-          refl _
-              ∎
-
-        -- true → false
-        ≡-loop′ false =
-          subst (λ x → (y : Hj x) → double (halve (x , y)) ≡ (x , y)) loop ≡-base false
-              ≡⟨ subst-Σfunc Hj (λ s → double (halve s) ≡ s) loop ≡-base (subst-Hj-loop true) ⟩
-          subst (λ s → double (halve s) ≡ s) double-path-true→false (refl _)
-              ≡⟨ subst-path[id] (double ∘ halve) double-path-true→false (refl _) ⟩
-          trans (sym (cong (double ∘ halve) double-path-true→false)) double-path-true→false
-              ≡⟨ cong (λ p → trans (sym p) double-path-true→false) $ sym $ cong-cong double halve double-path-true→false ⟩
-          trans (sym (cong double $ cong halve double-path-true→false)) double-path-true→false
-              ≡⟨ cong (λ p → trans (sym (cong double $ p)) double-path-true→false) $ cong-halve-double-path true ⟩∎
-          double-path-true→false
-              ∎
-
-        ≡-loop : subst (λ x → (y : Hj x) → double (halve (x , y)) ≡ (x , y)) loop ≡-base ≡ ≡-base
-        ≡-loop = ext[dep] ≡-loop′
-
-        left-inverse-of′ =
-          S¹-rec (λ x → (y : Hj x) → double (halve (x , y)) ≡ (x , y)) ≡-base ≡-loop
