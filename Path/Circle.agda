@@ -111,10 +111,14 @@ private
   subst-C-sym-loop : ∀ x → subst C (sym loop) x ≡ pred x
   subst-C-sym-loop x = subst-sym C loop x (pred x) $ subst-C-loop-pred x
 
-  -- The counting function
-  S¹loop⇒ℤ : base ≡ base → ℤ
-  S¹loop⇒ℤ p = subst C p zero
+-- The counting function
+S¹loop⇒ℤ : base ≡ base → ℤ
+S¹loop⇒ℤ p = subst C p zero
 
+------------------------------------------------------------------------
+-- Bijection
+
+private
   -- The right inverse (easy)
   right-inverse-of : ∀ z → S¹loop⇒ℤ (ℤ⇒S¹loop z) ≡ z
   right-inverse-of zero = refl _
@@ -184,7 +188,7 @@ private
   left-inverse-of : (p : base ≡ base) → ℤ⇒S¹loop (S¹loop⇒ℤ p) ≡ p
   left-inverse-of = left-inverse-of′ base
 
--- We have all ingredients now
+-- We have all the ingredients now!
 S¹loop↔ℤ : base ≡ base ↔ ℤ
 S¹loop↔ℤ =
   record
