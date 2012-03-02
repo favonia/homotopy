@@ -130,8 +130,8 @@ private
           subst C loop zero                         ≡⟨ subst-C-loop zero ⟩∎
           pos ℕzero                                 ∎
       right-inverse-of-pos (ℕsuc n) = 
-          subst C (trans (repeat (ℕsuc n) loop) loop) zero   ≡⟨ subst-trans C (repeat (ℕsuc n) loop) loop zero ⟩
-          subst C loop (subst C (repeat (ℕsuc n) loop) zero) ≡⟨ cong (subst C loop) $ right-inverse-of-pos n ⟩
+          subst C (trans (repeat (ℕsuc n) loop) loop) zero    ≡⟨ subst-trans C (repeat (ℕsuc n) loop) loop zero ⟩
+          subst C loop (subst C (repeat (ℕsuc n) loop) zero)  ≡⟨ cong (subst C loop) $ right-inverse-of-pos n ⟩
           subst C loop (pos n)                                ≡⟨ subst-C-loop (pos n) ⟩∎
           pos (ℕsuc n)                                        ∎
   right-inverse-of (neg n) = right-inverse-of-neg n

@@ -328,7 +328,7 @@ S¹↔ΣS¹Hj =
               refl _
                   ∎
     
-            -- (base , true) ~~> (base , false)
+            -- (base , false) ~~> (base , false)
             ≡-loop′ false =
               subst (λ x → (y : Hj x) → double (halve (x , y)) ≡ (x , y)) loop ≡-base false
                   ≡⟨ subst-Σfunc Hj (λ s → double (halve s) ≡ s) loop ≡-base (subst-Hj-loop true) ⟩
