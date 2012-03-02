@@ -172,17 +172,17 @@ private
       lemma (pos (ℕsuc n)) = refl _
       lemma (neg _) = trans-trans-symʳ _ _
 
-  -- A generalized ℤ⇒S¹loop ... ℤ⇒S¹path !
-  ℤ⇒S¹path : ∀ (x : S¹) → C x → base ≡ x
-  ℤ⇒S¹path = S¹-elim (λ x → C x → base ≡ x) ℤ⇒S¹loop (ext ℤ⇒S¹path-loop)
+  -- A generalized Cx⇒S¹loop ... Cx⇒S¹path !
+  Cx⇒S¹path : ∀ (x : S¹) → C x → base ≡ x
+  Cx⇒S¹path = S¹-elim (λ x → C x → base ≡ x) ℤ⇒S¹loop (ext ℤ⇒S¹path-loop)
   
-  -- A generalized S¹loop⇒ℤ ... S¹path⇒ℤ !
-  S¹path⇒ℤ : ∀ (x : S¹) → base ≡ x → C x
-  S¹path⇒ℤ x p = subst C p zero
+  -- A generalized S¹loop⇒Cx ... S¹path⇒Cx !
+  S¹path⇒Cx : ∀ (x : S¹) → base ≡ x → C x
+  S¹path⇒Cx x p = subst C p zero
 
   -- The generalized left inversion property (now easy?)
-  left-inverse-of′ : ∀ (x : S¹) → (p : base ≡ x) → ℤ⇒S¹path x (S¹path⇒ℤ x p) ≡ p
-  left-inverse-of′ x = elim′ (λ {x} p → ℤ⇒S¹path x (S¹path⇒ℤ x p) ≡ p) (refl _)
+  left-inverse-of′ : ∀ (x : S¹) → (p : base ≡ x) → Cx⇒S¹path x (S¹path⇒Cx x p) ≡ p
+  left-inverse-of′ x = elim′ (λ {x} p → Cx⇒S¹path x (S¹path⇒Cx x p) ≡ p) (refl _)
 
   -- The left inversion property we want
   left-inverse-of : (p : base ≡ base) → ℤ⇒S¹loop (S¹loop⇒ℤ p) ≡ p
