@@ -6,7 +6,7 @@
 
 -- Credits:
 --   * As far as I know, Peter Lumsdaine gave the construction.
---   * I followed Danial Licata's presentation.
+--   * J rule is used, following Danial Licata's simplification.
 
 open import Univalence
 
@@ -93,8 +93,8 @@ private
   abstract
     subst-C-loop : ∀ x → subst C loop x ≡ suc x
     subst-C-loop x =
-      subst C loop x              ≡⟨ sym $ subst-id-cong C loop x ⟩
-      subst id (cong C loop) x    ≡⟨ cong (λ p → subst id p x) $ cong-S¹-elim[simp]-loop ℤ suc-≡ ⟩
+      subst C loop x              ≡⟨ sym $ subst-cong id C loop x ⟩
+      subst id (cong C loop) x    ≡⟨ cong (λ p → subst id p x) $ S¹-elim[simp]-loop ℤ suc-≡ ⟩
       subst id suc-≡ x            ≡⟨ subst-id-univ suc-≡ x ⟩
       _≈_.to (≡⇒≈ suc-≡) x        ≡⟨ cong (λ weq → _≈_.to weq x) $ right-inverse-of suc-≈ ⟩
       _≈_.to suc-≈ x              ≡⟨ refl (suc x) ⟩∎
@@ -158,7 +158,7 @@ private
     subst (λ x → C x → base ≡ x) loop ℤ⇒S¹loop z
         ≡⟨ sym $ subst-app C (λ x → base ≡ x) loop ℤ⇒S¹loop (subst-C-loop-pred z) ⟩
     subst (λ x → base ≡ x) loop (ℤ⇒S¹loop (pred z))
-        ≡⟨ subst-path[id] (const base) loop (ℤ⇒S¹loop (pred z)) ⟩
+        ≡⟨ subst-path[idʳ] (const base) loop (ℤ⇒S¹loop (pred z)) ⟩
     trans (sym (cong (const base) loop)) (trans (ℤ⇒S¹loop (pred z)) loop)
         ≡⟨ cong (λ p → trans (sym p) (trans (ℤ⇒S¹loop (pred z)) loop)) $ cong-const base loop ⟩
     trans (ℤ⇒S¹loop (pred z)) loop

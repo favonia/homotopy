@@ -71,8 +71,8 @@ private
     -- "subst Hj loop" is "not"
     subst-Hj-loop : ∀ (x : Bool) → subst Hj loop x ≡ not x
     subst-Hj-loop x =
-      subst Hj loop x             ≡⟨ sym $ subst-id-cong Hj loop x ⟩
-      subst id (cong Hj loop) x   ≡⟨ cong (λ p → subst id p x) $ cong-S¹-elim[simp]-loop Bool not-≡ ⟩
+      subst Hj loop x             ≡⟨ sym $ subst-cong id Hj loop x ⟩
+      subst id (cong Hj loop) x   ≡⟨ cong (λ p → subst id p x) $ S¹-elim[simp]-loop Bool not-≡ ⟩
       subst id not-≡ x            ≡⟨ subst-id-univ not-≡ x ⟩
       _≈_.to (≡⇒≈ not-≡) x        ≡⟨ cong (λ weq → _≈_.to weq x) $ right-inverse-of not-≈ ⟩∎
       -- to not-≈ x               ≡⟨ refl (not x) ⟩∎
@@ -199,7 +199,7 @@ private
       lemma₃ : line₃ ≡ trans line₃′|₁ line₃′|₂
       lemma₃ =
         line₃
-            ≡⟨ cong (cong (λ f → f false)) $ cong[dep]-S¹-elim-loop (λ x → Hj x → S¹) halve′-base _ ⟩
+            ≡⟨ cong (cong (λ f → f false)) $ S¹-elim-loop (λ x → Hj x → S¹) halve′-base _ ⟩
         cong (λ f → f false) (trans halve′-boring-loop halve′-loop)
             ≡⟨ cong-trans (λ f → f false) halve′-boring-loop halve′-loop ⟩
         trans (cong (λ f → f false) halve′-boring-loop) (cong (λ f → f false) halve′-loop)
@@ -246,7 +246,7 @@ private
       lemma₃ : line₃ ≡ trans line₃′|₁ (trans line₃′|₂ loop)
       lemma₃ =
         line₃
-            ≡⟨ cong (cong (λ f → f true)) $ cong[dep]-S¹-elim-loop (λ x → Hj x → S¹) halve′-base _ ⟩
+            ≡⟨ cong (cong (λ f → f true)) $ S¹-elim-loop (λ x → Hj x → S¹) halve′-base _ ⟩
         cong (λ f → f true) (trans halve′-boring-loop halve′-loop)
             ≡⟨ cong-trans (λ f → f true) halve′-boring-loop halve′-loop ⟩
         trans (cong (λ f → f true) halve′-boring-loop) (cong (λ f → f true) halve′-loop)
@@ -273,7 +273,7 @@ private
           ∎
   
   cong-double-loop : cong double loop ≡ double-loop
-  cong-double-loop = cong-S¹-elim[simp]-loop double-base double-loop
+  cong-double-loop = S¹-elim[simp]-loop double-base double-loop
 
 S¹↔ΣS¹Hj : S¹ ↔ Σ S¹ Hj
 S¹↔ΣS¹Hj =
@@ -293,7 +293,7 @@ S¹↔ΣS¹Hj =
       where
         ≡-loop : subst (λ x → halve (double x) ≡ x) loop (refl base) ≡ refl base
         ≡-loop =
-          subst (λ x → halve (double x) ≡ x) loop (refl base)       ≡⟨ subst-path[id] (halve ∘ double) loop (refl base) ⟩
+          subst (λ x → halve (double x) ≡ x) loop (refl base)       ≡⟨ subst-path[idʳ] (halve ∘ double) loop (refl base) ⟩
           trans (sym (cong (halve ∘ double) loop)) loop             ≡⟨ cong (λ p → trans (sym p) loop) $ sym $ cong-cong halve double loop ⟩
           trans (sym (cong halve $ cong double loop)) loop          ≡⟨ cong (λ p → trans (sym (cong halve p)) loop) $ cong-double-loop ⟩
           trans (sym (cong halve double-loop)) loop                 ≡⟨ cong (λ p → trans (sym p) loop) $ cong-halve-double-loop ⟩
@@ -316,7 +316,7 @@ S¹↔ΣS¹Hj =
               subst (λ x → (y : Hj x) → double (halve (x , y)) ≡ (x , y)) loop ≡-base true
                   ≡⟨ subst-Σfunc Hj (λ s → double (halve s) ≡ s) loop ≡-base (subst-Hj-loop false) ⟩
               subst (λ s → double (halve s) ≡ s) double-path-false→true double-path-true→false
-                  ≡⟨ subst-path[id] (double ∘ halve) double-path-false→true double-path-true→false ⟩
+                  ≡⟨ subst-path[idʳ] (double ∘ halve) double-path-false→true double-path-true→false ⟩
               trans (sym (cong (double ∘ halve) double-path-false→true)) double-loop
                   ≡⟨ cong (λ p → trans (sym p) double-loop) $ sym $ cong-cong double halve double-path-false→true ⟩
               trans (sym (cong double $ cong halve double-path-false→true)) double-loop
@@ -333,7 +333,7 @@ S¹↔ΣS¹Hj =
               subst (λ x → (y : Hj x) → double (halve (x , y)) ≡ (x , y)) loop ≡-base false
                   ≡⟨ subst-Σfunc Hj (λ s → double (halve s) ≡ s) loop ≡-base (subst-Hj-loop true) ⟩
               subst (λ s → double (halve s) ≡ s) double-path-true→false (refl _)
-                  ≡⟨ subst-path[id] (double ∘ halve) double-path-true→false (refl _) ⟩
+                  ≡⟨ subst-path[idʳ] (double ∘ halve) double-path-true→false (refl _) ⟩
               trans (sym (cong (double ∘ halve) double-path-true→false)) double-path-true→false
                   ≡⟨ cong (λ p → trans (sym p) double-path-true→false) $ sym $ cong-cong double halve double-path-true→false ⟩
               trans (sym (cong double $ cong halve double-path-true→false)) double-path-true→false

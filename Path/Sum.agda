@@ -45,7 +45,6 @@ open import Bijection hiding (id; _∘_; inverse)
       subst (B ∘ proj₁) s≡s b₁  ≡⟨ cong[dep] (B ∘ proj₁) proj₂ s≡s ⟩∎
       b₂                        ∎
 
-------------------------------------------------------------------------
 -- Composition and decomposition form a bijection!
 
 ≡Σ↔Σ≡ : ∀ {ℓ₁ ℓ₂} {A : Set ℓ₁} (B : A → Set ℓ₂) {a₁ a₂ : A} {b₁ : B a₁} {b₂ : B a₂} →
@@ -76,6 +75,63 @@ open import Bijection hiding (id; _∘_; inverse)
         (λ a →
           elim 
           (λ {b₁ : B a} {b₂ : B a} (pb : b₁ ≡ b₂) → ≡Σ⇒Σ≡ B (Σ≡⇒≡Σ B (refl a , pb)) ≡ (refl a , pb))
+          (λ b → refl _))
+        pa pb
+
+------------------------------------------------------------------------
+-- A bijection between ((a₁ , b₁) ≡ (a₂ , b₂)) and
+-- (a₁ ≡ a₂) × (b₁ ≡ b₂). I.e., non-dependent version
+
+-- Compose equalities in a Σ type
+
+×≡⇒≡× : ∀ {ℓ₁ ℓ₂} {A : Set ℓ₁} {B : Set ℓ₂} {a₁ a₂ : A} {b₁ b₂ : B} →
+        (a₁ ≡ a₂) × (b₁ ≡ b₂) → (a₁ , b₁) ≡ (a₂ , b₂)
+×≡⇒≡× {a₁} {a₂} {b₁} {b₂} (a≡a , b≡b) = elim
+  (λ {a₁ a₂} a≡a → ∀ {b₁ b₂} → b₁ ≡ b₂ → (a₁ , b₁) ≡ (a₂ , b₂))
+  (λ a → λ {b₁} {b₂} b≡b →
+    (a , b₁) ≡⟨ cong (λ b → (a , b)) b≡b ⟩∎
+    (a , b₂) ∎)
+  a≡a b≡b
+
+-- Decompose equalities for a Σ type
+
+≡×⇒×≡ : ∀ {ℓ₁ ℓ₂} {A : Set ℓ₁} {B : Set ℓ₂} {a₁ a₂ : A} {b₁ b₂ : B} →
+        (a₁ , b₁) ≡ (a₂ , b₂) → (a₁ ≡ a₂) × (b₁ ≡ b₂)
+≡×⇒×≡ {b₁ = b₁} {b₂ = b₂} s≡s = (a≡a , b≡b)
+  where
+    a≡a = cong proj₁ s≡s
+    b≡b = cong proj₂ s≡s
+
+-- Composition and decomposition form a bijection!
+
+≡×↔×≡ : ∀ {ℓ₁ ℓ₂} {A : Set ℓ₁} (B : Set ℓ₂) {a₁ a₂ : A} {b₁ b₂ : B} →
+          ((a₁ , b₁) ≡ (a₂ , b₂)) ↔ (a₁ ≡ a₂) × (b₁ ≡ b₂)
+≡×↔×≡ B {a₁} {a₂} {b₁} {b₂} =
+  record
+  { surjection = record
+    { equivalence = record
+      { to = ≡×⇒×≡
+      ; from = ×≡⇒≡×
+      }
+    ; right-inverse-of = right-inverse-of
+    }
+  ; left-inverse-of = left-inverse-of
+  }
+  where
+    left-inverse-of : (p : (a₁ , b₁) ≡ (a₂ , b₂)) → ×≡⇒≡× (≡×⇒×≡ p) ≡ p
+    left-inverse-of p =
+      elim
+        (λ {s₁ s₂} p → ×≡⇒≡× (≡×⇒×≡ p) ≡ p)
+        (λ s → refl _)
+        p
+
+    right-inverse-of : (s : (a₁ ≡ a₂) × (b₁ ≡ b₂)) → ≡×⇒×≡ (×≡⇒≡× s) ≡ s
+    right-inverse-of (pa , pb) =
+      elim
+        (λ {a₁ a₂} pa → ∀ {b₁ b₂} (pb : b₁ ≡ b₂) → ≡×⇒×≡ (×≡⇒≡× (pa , pb)) ≡ (pa , pb))
+        (λ a →
+          elim 
+          (λ {b₁ b₂} (pb : b₁ ≡ b₂) → ≡×⇒×≡ (×≡⇒≡× (refl a , pb)) ≡ (refl a , pb))
           (λ b → refl _))
         pa pb
 
