@@ -16,7 +16,7 @@
 --    but I was too inexperienced to understand it back then.
 --  * The direction from "homotopy" to "dependent elim" is done by
 --    myself (Favonia) as an Agda exercise. The other direction
---    is not hard with extensionalty for functions...
+--    should not be hard with extensionalty for functions...
 
 module Inductive.AltBool where
 
