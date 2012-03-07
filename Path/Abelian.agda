@@ -50,22 +50,23 @@ abelian p q =
 -- but might be useful in the future.
 
 private
-  record IsMonoid {ℓ} (A : Set ℓ) (_∘_ : A → A → A) (unit : A) : Set ℓ where
+  record IsUnital {ℓ} (A : Set ℓ) (_∘_ : A → A → A) (unit : A) : Set ℓ where
     field
       unitʳ : ∀ (x : A) → x ∘ unit ≡ x
       unitˡ : ∀ (x : A) → unit ∘ x ≡ x
-      assoc : ∀ (x y z : A) → (x ∘ y) ∘ z ≡ x ∘ (y ∘ z)
+      -- Monoid is unnecessary. Unital is enough.
+      -- assoc : ∀ (x y z : A) → (x ∘ y) ∘ z ≡ x ∘ (y ∘ z)
 
   module EckmannHilton {ℓ}
     {A : Set ℓ} {_∘_ : A → A → A} {_∙_ : A → A → A} {unit : A}
-    (M₁′ : IsMonoid A _∘_ unit) (M₂′ : IsMonoid A _∙_ unit)
+    (M₁′ : IsUnital A _∘_ unit) (M₂′ : IsUnital A _∙_ unit)
     (interchange : ∀ (x y z w : A) → (x ∙ y) ∘ (z ∙ w) ≡ (x ∘ z) ∙ (y ∘ w)) where
 
     private
       module M₁ where
-        open IsMonoid M₁′ public
+        open IsUnital M₁′ public
       module M₂ where
-        open IsMonoid M₂′ public
+        open IsUnital M₂′ public
 
     same : ∀ (x y : A) → x ∘ y ≡ x ∙ y
     same x y =
@@ -92,25 +93,25 @@ private
   _∙_ = cong₂ trans
   unit = refl (refl base)
 
-  trans-monoid : IsMonoid Ω₂A _∘_ unit
-  trans-monoid = record
+  trans-unital : IsUnital Ω₂A _∘_ unit
+  trans-unital = record
     { unitʳ = trans-reflʳ
     ; unitˡ = λ _ → refl _
-    ; assoc = trans-assoc
+    --; assoc = trans-assoc
     }
 
-  cong₂-trans-monoid : IsMonoid Ω₂A _∙_ unit
-  cong₂-trans-monoid = record
+  cong₂-trans-unital : IsUnital Ω₂A _∙_ unit
+  cong₂-trans-unital = record
     { unitʳ = unitʳ
     ; unitˡ = unitˡ
-    ; assoc = assoc
+    --; assoc = assoc
     } where
       unitʳ : ∀ p → p ∙ unit ≡ p
       unitʳ p = elim″ (λ {x} p → p ∙ unit ≡ (trans-reflʳ x) ∘ p) (refl _) p
 
       unitˡ : ∀ p → unit ∙ p ≡ p
       unitˡ p = elim″ (λ {_} p → unit ∙ p ≡ p) (refl _) p
-
+      {-
       assoc : ∀ p q r → (p ∙ q) ∙ r ≡ p ∙ (q ∙ r)
       assoc p q r = elim″
         (λ {x} p → (p ∙ q) ∙ r ≡ trans-assoc x (refl base) (refl base) ∘ (p ∙ (q ∙ r)))
@@ -118,6 +119,7 @@ private
          q ∙ r          ≡⟨ sym $ unitˡ (q ∙ r) ⟩∎
          unit ∙ (q ∙ r) ∎)
         p
+      -}
 
   -- The effort to prove this is more than enough to prove abelianness:
   -- interchange : ∀ (x y z w : Ω₂A) → (x ∙ y) ∘ (z ∙ w) ≡ (x ∘ z) ∙ (y ∘ w)
