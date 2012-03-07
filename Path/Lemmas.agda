@@ -50,6 +50,14 @@ cong₂ f {x} {y} {u} {v} x≡y u≡v =
   f y u  ≡⟨ cong (f y)      u≡v ⟩∎
   f y v  ∎
 
+cong₂′ : ∀ {a b c} {A : Set a} {B : Set b} {C : Set c}
+        (f : A → B → C) {x y : A} {u v : B} →
+        x ≡ y → u ≡ v → f x u ≡ f y v
+cong₂′ f {x} {y} {u} {v} x≡y u≡v =
+  f x u  ≡⟨ cong (f x)      u≡v ⟩
+  f x v  ≡⟨ cong (flip f v) x≡y ⟩∎
+  f y v  ∎
+
 cong-id : ∀ {a} {A : Set a} {x y : A} (x≡y : x ≡ y) →
           cong id x≡y ≡ x≡y
 cong-id = elim (λ {x y} x≡y → cong id x≡y ≡ x≡y)

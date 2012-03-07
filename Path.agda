@@ -44,7 +44,7 @@ elim : ∀ {ℓ₁ ℓ₂} {A : Set ℓ₁} (P : {x y : A} → x ≡ y → Set �
 elim P r refl′ = r _
 
 ------------------------------------------------------------------------
--- Alternative elimination/computation rule
+-- Alternative elimination/computation rules
 
 elim′ : ∀ {ℓ₁ ℓ₂} {A : Set ℓ₁} {x : A} (P : {y : A} → x ≡ y → Set ℓ₂) →
         P (refl x) → ∀ {y} (x≡y : x ≡ y) → P x≡y
@@ -52,6 +52,15 @@ elim′ : ∀ {ℓ₁ ℓ₂} {A : Set ℓ₁} {x : A} (P : {y : A} → x ≡ y 
 elim′ {ℓ₂ = ℓ₂} {A = A} P r p =
   elim
     (λ {x y} p → (P : {y : A} → x ≡ y → Set ℓ₂) → P (refl x) → P p)
+    (λ x P r → r)
+    p P r
+
+elim″ : ∀ {ℓ₁ ℓ₂} {A : Set ℓ₁} {y : A} (P : {x : A} → x ≡ y → Set ℓ₂) →
+        P (refl y) → ∀ {x} (x≡y : x ≡ y) → P x≡y
+-- elim′ P r refl′ = r
+elim″ {ℓ₂ = ℓ₂} {A = A} P r p =
+  elim
+    (λ {x y} p → (P : {x : A} → x ≡ y → Set ℓ₂) → P (refl y) → P p)
     (λ x P r → r)
     p P r
 
