@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
--- Higher-order Paths are Abelian
+-- Higher-order Loop Spaces are Abelian
 ------------------------------------------------------------------------
 
 -- Copyright (c) 2012 Favonia
@@ -34,7 +34,7 @@ private
   lemma₂ : ∀ {ℓ₁ ℓ₂ ℓ₃} {A : Set ℓ₁} {B : Set ℓ₂} {C : Set ℓ₃}
            (f : A → B → C) {x y : A} {u v : B}
            (p : x ≡ y) (q : u ≡ v) → cong₂ f p q ≡ cong₂′ f p q
-  lemma₂ f {x = x} p q = elim′ (λ {y} p → cong₂ f p q ≡ cong₂′ f p q) (sym $ trans-reflʳ (cong (f x) q)) p
+  lemma₂ f p q = elim (λ {_ _} p → cong₂ f p q ≡ cong₂′ f p q) (λ _ → sym $ trans-reflʳ _) p
 
 abelian : ∀ (p q : Ω₂A) → trans p q ≡ trans q p
 abelian p q =
