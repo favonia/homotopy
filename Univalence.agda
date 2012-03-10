@@ -36,7 +36,7 @@ Univalence-axiom A B = Is-weak-equivalence (≡⇒≈ {A = A} {B = B})
 --   The Univalence axiom is equivalence induction!
 --
 -- Note: Here we show that "weak-equivalent induction"
---   and the Univalence axiom is mutually derivable.
+--   and the Univalence axiom are mutually derivable.
 
 private
 
@@ -51,7 +51,7 @@ private
                            (pid : (A : Set ℓ₁) → P (Weak.id {A = A})) →
                            ∀ {A} → ≈-elim P pid Weak.id ≡ pid A
 
-  -- The elimination rule for weak equivalence implies UA
+  -- The elimination and computation rules imply Univalence
   weq-elim⇒univ : ∀ {ℓ}
     (≈-elim : ≈-Elim ℓ (lsuc ℓ)) →
     ≈-Elim-id ℓ (lsuc ℓ) ≈-elim →
@@ -87,10 +87,12 @@ private
           (λ A → cong ≡⇒≈ (≈⇒≡-refl A))
           A≈B
 
-  -- The other way around.
+  -- The other way around. The Univalence axiom implies both.
   --
-  -- (Maybe we should have one big lemma outputting a tuple (Σ type) directly?)
-  -- TODO Find a cleaner proof
+  -- Maybe we should have one big lemma outputting a pair containing
+  -- the elimination rule and the computation rule directly?
+  --
+  -- TODO Find a cleaner proof. This is too ugly.
   univ⇒weq-elim : ∀ {ℓ ℓ′} → (∀ (A B : Set ℓ) → Univalence-axiom A B) → ≈-Elim ℓ ℓ′
   univ⇒weq-elim {ℓ} {ℓ′} univ P pid {A} {B} A≈B =
       subst P right-inverse (elim (λ {A B : Set ℓ} A≡B → P (≡⇒≈ A≡B)) pid (≈⇒≡ A≈B))
@@ -98,7 +100,7 @@ private
         A≡B≈A≈B : (A ≡ B) ≈ (A ≈ B)
         A≡B≈A≈B = weq ≡⇒≈ (univ A B)
 
-        ≈⇒≡ : A ≡ B → A ≈ B
+        ≈⇒≡ : A ≈ B → A ≡ B
         ≈⇒≡ = _≈_.from A≡B≈A≈B
 
         right-inverse : ≡⇒≈ (≈⇒≡ A≈B) ≡ A≈B
@@ -110,8 +112,13 @@ private
       subst P right-inverse (elim (λ {A B : Set ℓ} A≡B → P (≡⇒≈ A≡B)) pid (≈⇒≡ Weak.id))
           ≡⟨ refl _ ⟩
       subst P right-inverse (elim (λ {A B : Set ℓ} A≡B → P (≡⇒≈ A≡B)) pid (≈⇒≡ Weak.id))
-          ≡⟨ cong (subst P right-inverse) $ sym $ cong[dep] (P ∘ ≡⇒≈) (elim (λ {A B : Set ℓ} A≡B → P (≡⇒≈ A≡B)) pid) $ sym $ left-inverse ⟩
-      subst P right-inverse (subst (P ∘ ≡⇒≈) (sym left-inverse) (elim (λ {A B : Set ℓ} A≡B → P (≡⇒≈ A≡B)) pid (refl A)))
+          ≡⟨ cong (subst P right-inverse) $ sym $
+              cong[dep] (P ∘ ≡⇒≈) (elim (λ {A B : Set ℓ} A≡B → P (≡⇒≈ A≡B)) pid) $
+              sym $ left-inverse ⟩
+      subst P right-inverse
+        (subst (P ∘ ≡⇒≈) (sym left-inverse)
+          (elim (λ {A B : Set ℓ} A≡B → P (≡⇒≈ A≡B)) pid (refl A)))
+
           ≡⟨ refl _ ⟩
       subst P right-inverse (subst (P ∘ ≡⇒≈) (sym left-inverse) (pid A))
           ≡⟨ cong (subst P right-inverse) $ sym $ subst-cong P ≡⇒≈ (sym left-inverse) (pid A) ⟩
@@ -129,7 +136,7 @@ private
         A≡A≈A≈A : (A ≡ A) ≈ (A ≈ A)
         A≡A≈A≈A = weq ≡⇒≈ (univ A A)
 
-        ≈⇒≡ : A ≡ A → A ≈ A
+        ≈⇒≡ : A ≈ A → A ≡ A
         ≈⇒≡ = _≈_.from A≡A≈A≈A
 
         left-inverse : ≈⇒≡ Weak.id ≡ refl A
