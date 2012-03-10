@@ -110,27 +110,12 @@ private
                      ≈-Elim-id ℓ ℓ′ (univ⇒weq-elim univ)
   univ⇒weq-elim-id {ℓ} {ℓ′} univ P pid {A} =
       subst P right-inverse (elim (λ {A B : Set ℓ} A≡B → P (≡⇒≈ A≡B)) pid (≈⇒≡ Weak.id))
-          ≡⟨ refl _ ⟩
-      subst P right-inverse (elim (λ {A B : Set ℓ} A≡B → P (≡⇒≈ A≡B)) pid (≈⇒≡ Weak.id))
-          ≡⟨ cong (subst P right-inverse) $ sym $
-              cong[dep] (P ∘ ≡⇒≈) (elim (λ {A B : Set ℓ} A≡B → P (≡⇒≈ A≡B)) pid) $
-              sym $ left-inverse ⟩
-      subst P right-inverse
-        (subst (P ∘ ≡⇒≈) (sym left-inverse)
-          (elim (λ {A B : Set ℓ} A≡B → P (≡⇒≈ A≡B)) pid (refl A)))
-
-          ≡⟨ refl _ ⟩
-      subst P right-inverse (subst (P ∘ ≡⇒≈) (sym left-inverse) (pid A))
-          ≡⟨ cong (subst P right-inverse) $ sym $ subst-cong P ≡⇒≈ (sym left-inverse) (pid A) ⟩
-      subst P right-inverse (subst P (cong ≡⇒≈ (sym left-inverse)) (pid A))
-          ≡⟨ cong (λ p → subst P right-inverse (subst P p (pid A))) $ cong-sym ≡⇒≈ left-inverse ⟩
-      subst P right-inverse (subst P (sym (cong ≡⇒≈ left-inverse)) (pid A))
-          ≡⟨ cong (λ p → subst P right-inverse (subst P (sym p) (pid A))) $ cong-left ⟩
-      subst P right-inverse (subst P (sym right-inverse) (pid A))
-          ≡⟨ sym $ subst-trans P (sym right-inverse) right-inverse (pid A) ⟩
-      subst P (trans (sym right-inverse) right-inverse) (pid A)
-          ≡⟨ cong (λ p → subst P p (pid A)) $ trans-symˡ right-inverse ⟩∎
-      pid A
+          ≡⟨ cong (λ p → subst P p (elim (λ {A B : Set ℓ} A≡B → P (≡⇒≈ A≡B)) pid (≈⇒≡ Weak.id))) $ sym cong-left ⟩
+      subst P (cong ≡⇒≈ left-inverse) (elim (λ {A B : Set ℓ} A≡B → P (≡⇒≈ A≡B)) pid (≈⇒≡ Weak.id))
+          ≡⟨ subst-cong P ≡⇒≈ left-inverse (elim (λ {A B : Set ℓ} A≡B → P (≡⇒≈ A≡B)) pid (≈⇒≡ Weak.id)) ⟩
+      subst (P ∘ ≡⇒≈) left-inverse (elim (λ {A B : Set ℓ} A≡B → P (≡⇒≈ A≡B)) pid (≈⇒≡ Weak.id))
+          ≡⟨ cong[dep] (P ∘ ≡⇒≈) (elim (λ {A B : Set ℓ} A≡B → P (≡⇒≈ A≡B)) pid) left-inverse ⟩∎
+      elim (λ {A B : Set ℓ} A≡B → P (≡⇒≈ A≡B)) pid (refl A)
           ∎
       where
         A≡A≈A≈A : (A ≡ A) ≈ (A ≈ A)
