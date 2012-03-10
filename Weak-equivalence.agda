@@ -70,7 +70,6 @@ record _≈_ {a b} (A : Set a) (B : Set b) : Set (a ⊔ b) where
   open _↔_ bijection public
     hiding (from; to; right-inverse-of; left-inverse-of)
 
-{-
   abstract
 
     -- All preimages of an element under the weak equivalence are
@@ -85,7 +84,7 @@ record _≈_ {a b} (A : Set a) (B : Set b) : Set (a ⊔ b) where
     left-right-lemma :
       ∀ x → cong to (left-inverse-of x) ≡ right-inverse-of (to x)
     left-right-lemma x =
-      lemma₁ to _ _ (lemma₂ (irrelevance (to x) (x , refl (to x))))
+      lemma₁ to (left-inverse-of x) _ (lemma₂ (irrelevance (to x) (x , refl (to x))))
       where
       lemma₁ : {x y : A} (f : A → B) (p : x ≡ y) (q : f x ≡ f y) →
                refl (f y) ≡ trans (cong f (sym p)) q →
@@ -94,11 +93,11 @@ record _≈_ {a b} (A : Set a) (B : Set b) : Set (a ⊔ b) where
         (λ {x y} p → ∀ q → refl (f y) ≡ trans (cong f (sym p)) q →
                            cong f p ≡ q)
         (λ x q hyp →
-           cong f (refl x)                  ≡⟨ cong-refl f ⟩
-           refl (f x)                       ≡⟨ hyp ⟩
-           trans (cong f (sym (refl x))) q  ≡⟨ cong (λ p → trans (cong f p) q) sym-refl ⟩
-           trans (cong f (refl x)) q        ≡⟨ cong (λ p → trans p q) (cong-refl f) ⟩
-           trans (refl (f x)) q             ≡⟨ prove (Trans Refl (Lift q)) (Lift q) (refl _) ⟩∎
+           cong f (refl x)                  ≡⟨ refl _ ⟩
+           refl (f x)                       ≡⟨ hyp ⟩∎
+--         trans (cong f (sym (refl x))) q  ≡⟨ refl _ ⟩
+--         trans (cong f (refl x)) q        ≡⟨ refl _ ⟩
+--         trans (refl (f x)) q             ≡⟨ refl _ ⟩∎
            q                                ∎)
 
       lemma₂ : ∀ {f : A → B} {y} {f⁻¹y₁ f⁻¹y₂ : f ⁻¹ y}
@@ -113,15 +112,12 @@ record _≈_ {a b} (A : Set a) (B : Set b) : Set (a ⊔ b) where
              proj₂ f⁻¹y₂ ≡
                trans (cong f (sym (cong pr p))) (proj₂ f⁻¹y₁))
           (λ f⁻¹y →
-             proj₂ f⁻¹y                                               ≡⟨ prove (Lift (proj₂ f⁻¹y))
-                                                                               (Trans Refl (Lift (proj₂ f⁻¹y)))
-                                                                               (refl _) ⟩
-             trans (refl (f (proj₁ f⁻¹y))) (proj₂ f⁻¹y)               ≡⟨ cong (λ p → trans p (proj₂ f⁻¹y)) (sym (cong-refl f)) ⟩
-             trans (cong f (refl (proj₁ f⁻¹y))) (proj₂ f⁻¹y)          ≡⟨ cong (λ p → trans (cong f p) (proj₂ f⁻¹y)) (sym sym-refl) ⟩
-             trans (cong f (sym (refl (proj₁ f⁻¹y)))) (proj₂ f⁻¹y)    ≡⟨ cong (λ p → trans (cong f (sym p)) (proj₂ f⁻¹y))
-                                                                              (sym (cong-refl pr)) ⟩∎
+             proj₂ f⁻¹y                                               ≡⟨ refl _ ⟩
+             trans (refl (f (proj₁ f⁻¹y))) (proj₂ f⁻¹y)               ≡⟨ refl _ ⟩
+             trans (cong f (refl (proj₁ f⁻¹y))) (proj₂ f⁻¹y)          ≡⟨ refl _ ⟩
+             trans (cong f (sym (refl (proj₁ f⁻¹y)))) (proj₂ f⁻¹y)    ≡⟨ refl _ ⟩∎
              trans (cong f (sym (cong pr (refl f⁻¹y)))) (proj₂ f⁻¹y)  ∎)
--}
+
 -- Bijections are weak equivalences.
 
 ↔⇒≈ : ∀ {a b} {A : Set a} {B : Set b} → A ↔ B → A ≈ B
@@ -135,8 +131,13 @@ record _≈_ {a b} (A : Set a) (B : Set b) : Set (a ⊔ b) where
 
 -- Weak equivalences are equivalence relations.
 
+-- This is subject to changes
 id : ∀ {a} {A : Set a} → A ≈ A
-id = ↔⇒≈ Bijection.id
+-- id = ↔⇒≈ Bijection.id
+id = record
+  { to                  = P.id
+  ; is-weak-equivalence = Preimage.id⁻¹-contractible
+  }
 
 inverse : ∀ {a b} {A : Set a} {B : Set b} → A ≈ B → B ≈ A
 inverse = ↔⇒≈ ⊚ Bijection.inverse ⊚ _≈_.bijection
