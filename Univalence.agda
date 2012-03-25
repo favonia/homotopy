@@ -14,7 +14,7 @@ module Univalence where
 open import Prelude
 open import Path
 open import Path.Lemmas
-open import Weak-equivalence as Weak hiding (_∘_; id)
+open import Map.Weak-equivalence as Weak hiding (_∘_; id)
 
 ------------------------------------------------------------------------
 -- The univalence axiom
@@ -111,7 +111,7 @@ private
           ≡⟨ subst-cong P ≡⇒≈ left-inverse (elim (λ {_ _} A≡B → P (≡⇒≈ A≡B)) pid (≈⇒≡ Weak.id)) ⟩
       subst (P ∘ ≡⇒≈) left-inverse (elim (λ {_ _} A≡B → P (≡⇒≈ A≡B)) pid (≈⇒≡ Weak.id))
           ≡⟨ cong[dep] (P ∘ ≡⇒≈) (elim (λ {_ _} A≡B → P (≡⇒≈ A≡B)) pid) left-inverse ⟩∎
-      elim (λ {A B : Set ℓ} A≡B → P (≡⇒≈ A≡B)) pid (refl A)
+      elim (λ {_ _} A≡B → P (≡⇒≈ A≡B)) pid (refl A)
           ∎
       where
         A≡A≈A≈A : (A ≡ A) ≈ (A ≈ A)

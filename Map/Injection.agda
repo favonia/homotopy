@@ -7,11 +7,10 @@
 
 {-# OPTIONS --without-K #-}
 
-module Injection where
+module Map.Injection where
 
-open import Path
-open import Path.Lemmas
 open import Prelude as P hiding (id) renaming (_∘_ to _⊚_)
+open import Path
 
 ------------------------------------------------------------------------
 -- Injections

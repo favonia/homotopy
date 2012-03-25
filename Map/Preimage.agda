@@ -9,14 +9,13 @@
 
 -- Partly based on Voevodsky's work on univalent foundations.
 
-module Preimage where
+module Map.Preimage where
 
 open import Prelude
 open import Path
-open import Path.Lemmas
-open import Path.Sum
-open import Surjection hiding (id; _∘_)
-open import Bijection hiding (id; _∘_)
+
+open import Map.Surjection hiding (id; _∘_)
+open import Map.Bijection hiding (id; _∘_)
 
 -- The preimage of y under f is denoted by f ⁻¹ y.
 
@@ -27,15 +26,18 @@ f ⁻¹ y = ∃ λ x → f x ≡ y
 
 -- This is subject to changes
 id⁻¹-contractible : ∀ {ℓ} {A : Set ℓ} (x : A) → Contractible (id ⁻¹ x)
-id⁻¹-contractible x =
-  ((x , refl x) ,
-    λ {(x′ , x′≡x) →
-        Σ≡⇒≡Σ (λ x′ → x′ ≡ x) (
-          sym x′≡x ,
-          elim″ (λ {x″} p → subst (λ x′ → x′ ≡ x) (sym p) (refl x) ≡ p) (refl _) x′≡x
-        )})
+id⁻¹-contractible y = (y , refl y) , λ {(_ , p) → elim″ (λ {x} p → (y , refl y) ≡ (x , p)) (refl _) p}
 
 postulate
   bijection⁻¹-contractible :
-    ∀ {a b} {A : Set a} {B : Set b} (A↔B : A ↔ B) →
+    ∀ {ℓ₁ ℓ₂} {A : Set ℓ₁} {B : Set ℓ₂} (A↔B : A ↔ B) →
     let open _↔_ A↔B in ∀ y → Contractible (to ⁻¹ y)
+{-
+bijection⁻¹-contractible A↔B y =
+  (from y , right-inverse-of y) ,
+  λ {(x , to-x≡y) → elim′ (λ {x} p → (from y , right-inverse-of y) ≡ (x , p)) (refl _) to-x≡y}
+  where
+    open _↔_ A↔B
+
+    lemma : ∀ x → (from (to x) , right-inverse-of (to x)) ≡ (x , refl (to x))
+-}

@@ -7,14 +7,18 @@
 
 {-# OPTIONS --without-K #-}
 
-module Bijection where
+-- This is actually
+-- (1) Homotopy isomorphism
+-- (2) Homotopy equivalence
 
-open import Path
-open import Path.Lemmas
-import Equivalence
-open import Injection using (Injective; _↣_)
+module Map.Bijection where
+
 open import Prelude as P hiding (id) renaming (_∘_ to _⊚_)
-open import Surjection using (_↠_; module _↠_)
+open import Path
+
+import Map.Equivalence as Equivalence
+open import Map.Injection using (Injective; _↣_)
+open import Map.Surjection as Surjection using (_↠_; module _↠_)
 
 ------------------------------------------------------------------------
 -- Bijections

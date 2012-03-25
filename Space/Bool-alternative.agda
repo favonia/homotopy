@@ -18,7 +18,7 @@
 --    myself (Favonia) as an Agda exercise. The other direction
 --    should not be hard with extensionalty for functions...
 
-module Inductive.Bool-alternative where
+module Space.Bool-alternative where
 
 open import Prelude hiding (Bool; true; false; if_then_else_)
 open import Path

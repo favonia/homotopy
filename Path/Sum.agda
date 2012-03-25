@@ -15,7 +15,7 @@ module Path.Sum where
 open import Prelude
 open import Path
 open import Path.Lemmas
-open import Bijection hiding (id; _∘_; inverse)
+open import Map.Bijection hiding (id; _∘_; inverse)
 
 ------------------------------------------------------------------------
 -- A bijection between ((a₁ , b₁) ≡ (a₂ , b₂)) and

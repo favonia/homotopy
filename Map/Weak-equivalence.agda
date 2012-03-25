@@ -9,14 +9,15 @@
 
 -- Partly based on Voevodsky's work on univalent foundations.
 
-module Weak-equivalence where
+module Map.Weak-equivalence where
 
 open import Prelude as P hiding (id) renaming (_∘_ to _⊚_)
 open import Path
-open import Equivalence hiding (id; _∘_; inverse)
-open import Surjection using (_↠_; module _↠_)
-open import Bijection hiding (id; _∘_; inverse)
-open import Preimage
+
+open import Map.Equivalence hiding (id; _∘_; inverse)
+open import Map.Surjection using (_↠_; module _↠_)
+open import Map.Bijection as Bijection hiding (id; _∘_; inverse)
+open import Map.Preimage as Preimage
 
 ------------------------------------------------------------------------
 -- Is-weak-equivalence

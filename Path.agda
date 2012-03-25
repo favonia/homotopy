@@ -114,3 +114,16 @@ syntax finally x y x≡y = x ≡⟨ x≡y ⟩∎ y ∎
 -- equal.
 Contractible : ∀ {ℓ} → Set ℓ → Set ℓ
 Contractible A = ∃ λ (x : A) → ∀ y → x ≡ y
+
+-- Singleton x is a set which contains all elements which are equal
+-- to x.
+Singleton : ∀ {ℓ} {A : Set ℓ} → A → Set ℓ
+Singleton x = ∃ λ y → y ≡ x
+
+-- Extensionality for (non-dependent) functions of a certain type.
+Extensionality : ∀ {ℓ₁ ℓ₂} → Set ℓ₁ → Set ℓ₂ → Set (ℓ₁ ⊔ ℓ₂)
+Extensionality A B = {f g : A → B} → (∀ x → f x ≡ g x) → f ≡ g
+
+-- Extensionality for dependent functions of a certain type.
+Extensionality[dep] : ∀ {ℓ₁ ℓ₂} (A : Set ℓ₁) → (A → Set ℓ₂) → Set (ℓ₁ ⊔ ℓ₂)
+Extensionality[dep] A B = {f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g

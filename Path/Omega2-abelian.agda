@@ -18,7 +18,7 @@
 --
 --  * I found a much shorter proof while following the above approach.
 
-module Path.Abelian {ℓ} {A : Set ℓ} (base : A) where
+module Path.Omega2-abelian {ℓ} {A : Set ℓ} (base : A) where
  
 open import Prelude hiding (_∘_)
 open import Path

@@ -7,13 +7,13 @@
 
 {-# OPTIONS --without-K #-}
 
-module Surjection where
+module Map.Surjection where
 
-open import Path
-open import Path.Lemmas
-open import Equivalence
-  using (_⇔_; module _⇔_) renaming (_∘_ to _⊙_)
 open import Prelude as P hiding (id) renaming (_∘_ to _⊚_)
+open import Path
+
+open import Map.Equivalence as Equivalence
+  using (_⇔_; module _⇔_) renaming (_∘_ to _⊙_)
 
 ------------------------------------------------------------------------
 -- Surjections

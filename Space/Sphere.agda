@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
--- Spheres.
+-- Spheres (base + loop)
 ------------------------------------------------------------------------
 
 -- Copyright (c) 2012 Favonia
@@ -8,7 +8,7 @@
 
 {-# OPTIONS --without-K #-}
 
-module HigherInductive.Sphere where
+module Space.Sphere where
 
 open import Prelude
 open import Path

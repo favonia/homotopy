@@ -10,21 +10,20 @@
 
 open import Univalence
 
-module Path.Circle
+module Space.Sphere.Omega1S1-Z
   (univ : ∀ {ℓ} (A B : Set ℓ) → Univalence-axiom A B) where
 
 open import Prelude renaming (zero to ℕzero; suc to ℕsuc)
 open import Path
 open import Path.Lemmas
 open import Path.Sum
-open import Bijection hiding (_∘_; id)
-open import Weak-equivalence as Weak hiding (_∘_; id)
+open import Map.Bijection hiding (_∘_; id)
+open import Map.Weak-equivalence as Weak hiding (_∘_; id)
 
 import Univalence.Lemmas; open Univalence.Lemmas univ
-import Univalence.Extensionality; open Univalence.Extensionality univ
 
-open import Inductive.Integer
-open import HigherInductive.Sphere
+open import Space.Integer
+open import Space.Sphere
 
 ------------------------------------------------------------------------
 -- From ℤ to paths

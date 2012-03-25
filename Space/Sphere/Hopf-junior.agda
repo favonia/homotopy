@@ -17,20 +17,19 @@
 
 open import Univalence
 
-module HigherInductive.Hopf-junior
+module Space.Sphere.Hopf-junior
   (univ : ∀ {ℓ} (A B : Set ℓ) → Univalence-axiom A B) where
 
 open import Prelude
 open import Path
 open import Path.Lemmas
 open import Path.Sum
-open import Bijection hiding (_∘_; id)
-open import Weak-equivalence as Weak hiding (_∘_; id)
+open import Map.Bijection hiding (_∘_; id)
+open import Map.Weak-equivalence as Weak hiding (_∘_; id)
 
 import Univalence.Lemmas; open Univalence.Lemmas univ
-import Univalence.Extensionality; open Univalence.Extensionality univ
 
-open import HigherInductive.Sphere
+open import Space.Sphere
 
 ------------------------------------------------------------------------
 -- Construction: apply S¹-elim to a non-trivial bijection in S⁰
@@ -203,11 +202,11 @@ private
         cong (λ f → f false) (trans halve′-boring-loop halve′-loop)
             ≡⟨ cong-trans (λ f → f false) halve′-boring-loop halve′-loop ⟩
         trans (cong (λ f → f false) halve′-boring-loop) (cong (λ f → f false) halve′-loop)
-            ≡⟨ cong (trans $ cong (λ f → f false) halve′-boring-loop) $ ext-elim halve′-loop′ false ⟩
+            ≡⟨ cong (trans $ cong (λ f → f false) halve′-boring-loop) $ ext-comp halve′-loop′ false ⟩
         trans (cong (λ f → f false) halve′-boring-loop) (halve′-loop′ false)
             ≡⟨ trans-reflʳ $ cong (λ f → f false) halve′-boring-loop ⟩
         cong (λ f → f false) halve′-boring-loop
-            ≡⟨ ext-elim halve′-boring-loop′ false ⟩
+            ≡⟨ ext-comp halve′-boring-loop′ false ⟩
         halve′-boring-loop′ false
             ≡⟨ refl _ ⟩∎
         trans line₃′|₁ line₃′|₂
@@ -250,11 +249,11 @@ private
         cong (λ f → f true) (trans halve′-boring-loop halve′-loop)
             ≡⟨ cong-trans (λ f → f true) halve′-boring-loop halve′-loop ⟩
         trans (cong (λ f → f true) halve′-boring-loop) (cong (λ f → f true) halve′-loop)
-            ≡⟨ cong (trans $ cong (λ f → f true) halve′-boring-loop) $ ext-elim halve′-loop′ true ⟩
+            ≡⟨ cong (trans $ cong (λ f → f true) halve′-boring-loop) $ ext-comp halve′-loop′ true ⟩
         trans (cong (λ f → f true) halve′-boring-loop) (halve′-loop′ true)
             ≡⟨ refl _ ⟩
         trans (cong (λ f → f true) halve′-boring-loop) loop
-            ≡⟨ cong (λ p → trans p loop) $ ext-elim halve′-boring-loop′ true ⟩
+            ≡⟨ cong (λ p → trans p loop) $ ext-comp halve′-boring-loop′ true ⟩
         trans (halve′-boring-loop′ true) loop
             ≡⟨ trans-assoc line₃′|₁ line₃′|₂ loop ⟩∎
         trans line₃′|₁ (trans line₃′|₂ loop)

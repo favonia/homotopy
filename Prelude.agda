@@ -64,6 +64,10 @@ record ⊤ : Set where
 data Bool : Set where
   true false : Bool
 
+{-# BUILTIN BOOL Bool #-}
+{-# BUILTIN TRUE true #-}
+{-# BUILTIN FALSE false #-}
+
 -- Conditional.
 
 if_then_else_ : ∀ {a} {A : Set a} → Bool → A → A → A
@@ -280,6 +284,10 @@ infixr 5 _∷_
 data List {a} (A : Set a) : Set a where
   []  : List A
   _∷_ : (x : A) (xs : List A) → List A
+
+{-# BUILTIN LIST List #-}
+{-# BUILTIN NIL [] #-}
+{-# BUILTIN CONS _∷_ #-}
 
 -- Right fold.
 

@@ -6,7 +6,7 @@
 
 {-# OPTIONS --without-K #-}
 
-module Inductive.Integer where
+module Space.Integer where
 
 open import Prelude renaming (suc to ℕsuc; zero to ℕzero)
 

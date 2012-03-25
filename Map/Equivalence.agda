@@ -7,7 +7,7 @@
 
 {-# OPTIONS --without-K #-}
 
-module Equivalence where
+module Map.Equivalence where
 
 open import Prelude as P hiding (id) renaming (_∘_ to _⊚_)
 

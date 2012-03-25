@@ -13,7 +13,7 @@ open import Path
 module Path.Lemmas where
 
 ------------------------------------------------------------------------
--- Tons of lemmas
+-- Tons of lemmas to handle paths
 
 trans-reflʳ : ∀ {ℓ} {A : Set ℓ} {x y : A} (x≡y : x ≡ y) →
               trans x≡y (refl y) ≡ x≡y
