@@ -5,6 +5,7 @@
 ------------------------------------------------------------------------
 
 -- Copyright (c) 2012 Favonia
+-- Copyright (c) 2011-2012 Nils Anders Danielsson
 
 -- A large portion of code was shamelessly copied from Nils' library
 -- http://www.cse.chalmers.se/~nad/repos/equality/
@@ -48,6 +49,9 @@ import Path
 -- Some really basic lemmas for equivalence of paths
 import Path.Lemmas
 
+-- Higher-order paths and loops
+import Path.Higher-order
+
 -- A short proof that Ω₂(A) is abelian for any space A
 import Path.Omega2-abelian
 
@@ -86,6 +90,9 @@ import Space.Sphere.Hopf-junior
 
 -- A proof that Ω₁(S₁) is ℤ
 import Space.Sphere.Omega1S1-Z
+
+-- Definition of torus
+--import Space.Torus
 
 ------------------------------------------------------------------------
 -- The Univalence axiom
