@@ -5,10 +5,12 @@
 ------------------------------------------------------------------------
 
 -- Copyright (c) 2012 Favonia
--- Copyright (c) 2011-2012 Nils Anders Danielsson
+-- released under BSD-like license (See LICENSE)
 
--- A large portion of code was shamelessly copied from Nils' library
+-- A large portion of code was shamelessly copied from Nils Anders Danielsson'
+-- library released under BSD-like license (See LICENCE-Nils)
 -- http://www.cse.chalmers.se/~nad/repos/equality/
+-- Copyright (c) 2011-2012 Nils Anders Danielsson
 
 {-# OPTIONS --without-K #-}
 
@@ -77,6 +79,10 @@ import Space.Integer
 
 -- Definition of intervals
 import Space.Interval
+
+-- Some basic facts about Nat
+-- (Definition of Nat is in the Prelude)
+import Space.Nat.Lemmas
 
 -- Definition of spheres (base + loop)
 import Space.Sphere

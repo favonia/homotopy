@@ -23,12 +23,10 @@ module Path.Omega2-abelian {ℓ} {A : Set ℓ} (base : A) where
 open import Prelude hiding (_∘_)
 open import Path
 open import Path.Lemmas
+open import Path.Higher-order
 
 private
-  Ω₁A = base ≡ base
-  Ω₂A = refl base ≡ refl base
-
-  lemma₁ : ∀ (p : Ω₂A) → cong (λ p′ → trans p′ (refl base)) p ≡ p
+  lemma₁ : ∀ (p : Ω 2 base) → cong (λ p′ → trans p′ (refl base)) p ≡ p
   lemma₁ p = elim″ (λ {x} p → cong (λ p → trans p (refl _)) p ≡ trans (trans-reflʳ x) p) (refl _) p
 
   lemma₂ : ∀ {ℓ₁ ℓ₂ ℓ₃} {A : Set ℓ₁} {B : Set ℓ₂} {C : Set ℓ₃}
@@ -36,7 +34,7 @@ private
            (p : x ≡ y) (q : u ≡ v) → cong₂ f p q ≡ cong₂′ f p q
   lemma₂ f p q = elim (λ {_ _} p → cong₂ f p q ≡ cong₂′ f p q) (λ _ → sym $ trans-reflʳ _) p
 
-abelian : ∀ (p q : Ω₂A) → trans p q ≡ trans q p
+abelian : ∀ (p q : Ω 2 base) → trans p q ≡ trans q p
 abelian p q =
   trans p q                                                 ≡⟨ cong (trans p) $ sym $ cong-id q ⟩
   trans p (cong id q)                                       ≡⟨ cong (flip trans (cong id q)) $ sym $ lemma₁ p ⟩
@@ -93,14 +91,14 @@ private
   _∙_ = cong₂ trans
   unit = refl (refl base)
 
-  trans-unital : IsUnital Ω₂A _∘_ unit
+  trans-unital : IsUnital (Ω 2 base) _∘_ unit
   trans-unital = record
     { unitʳ = trans-reflʳ
     ; unitˡ = λ _ → refl _
     --; assoc = trans-assoc
     }
 
-  cong₂-trans-unital : IsUnital Ω₂A _∙_ unit
+  cong₂-trans-unital : IsUnital (Ω 2 base) _∙_ unit
   cong₂-trans-unital = record
     { unitʳ = unitʳ
     ; unitˡ = unitˡ
