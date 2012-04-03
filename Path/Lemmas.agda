@@ -216,6 +216,29 @@ subst-path[constʳ] f g′ =
         subst (λ x → f x ≡ g′) p q ≡ trans (sym (cong f p)) q)
     (λ x q → refl _)
 
+cong-≡ : ∀ {ℓ₁} {A B : Set ℓ₁} (up : A ≡ B)
+         {a₁ : A} {b₁ : B} (p₁ : subst id up a₁ ≡ b₁)
+         {a₂ : A} {b₂ : B} (p₂ : subst id up a₂ ≡ b₂) →
+         (a₁ ≡ a₂) ≡ (b₁ ≡ b₂)
+cong-≡ = elim
+            (λ {A B} (up : A ≡ B) →
+                {a₁ : A} {b₁ : B} (p₁ : subst id up a₁ ≡ b₁)
+                {a₂ : A} {b₂ : B} (p₂ : subst id up a₂ ≡ b₂) →
+                (a₁ ≡ a₂) ≡ (b₁ ≡ b₂))
+            (λ A p₁ p₂ → cong₂ (_≡_) p₁ p₂)
+
+subst-cong-≡ : ∀ {ℓ₁} {A B : Set ℓ₁} (up : A ≡ B)
+                {a : A} {b : B} (p : subst id up a ≡ b) →
+                subst id (cong-≡ up p p) (refl a) ≡ refl b
+subst-cong-≡ = elim
+            (λ {A B} up →
+                {a : A} {b : B} (p : subst id up a ≡ b) →
+                subst id (cong-≡ up p p) (refl a) ≡ refl b)
+            (λ x → elim
+                (λ {a b} p →
+                    subst id (cong-≡ (refl x) p p) (refl a) ≡ refl b)
+                (λ ab → refl _))
+
 -- Derived³ lemmas
 
 cong[dep]-const : ∀ {ℓ₁ ℓ₂} {A : Set ℓ₁} {B : Set ℓ₂} (f : A → B)
