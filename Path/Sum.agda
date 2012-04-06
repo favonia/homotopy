@@ -7,7 +7,7 @@
 {-# OPTIONS --without-K #-}
 
 -- The public interface includes
---  * A bijection between (a₁ , b₁) ≡ (a₂ , b₂)
+--  * A homotopy equivalence between (a₁ , b₁) ≡ (a₂ , b₂)
 --    and Σ (a₁ ≡ a₂) (λ p → subst B p b₁ ≡ b₂)
 
 module Path.Sum where
@@ -15,10 +15,10 @@ module Path.Sum where
 open import Prelude
 open import Path
 open import Path.Lemmas
-open import Map.Bijection hiding (id; _∘_; inverse)
+open import Map.H-equivalence hiding (id; _∘_; inverse)
 
 ------------------------------------------------------------------------
--- A bijection between ((a₁ , b₁) ≡ (a₂ , b₂)) and
+-- A homotopy equivalence between ((a₁ , b₁) ≡ (a₂ , b₂)) and
 -- Σ (a₁ ≡ a₂) (λ p → subst B p b₁ ≡ b₂)
 
 -- Compose equalities in a Σ type
@@ -45,17 +45,15 @@ open import Map.Bijection hiding (id; _∘_; inverse)
       subst (B ∘ proj₁) s≡s b₁  ≡⟨ cong[dep] (B ∘ proj₁) proj₂ s≡s ⟩∎
       b₂                        ∎
 
--- Composition and decomposition form a bijection!
+-- Composition and decomposition form a homotopy equivalence!
 
 ≡Σ↔Σ≡ : ∀ {ℓ₁ ℓ₂} {A : Set ℓ₁} (B : A → Set ℓ₂) {a₁ a₂ : A} {b₁ : B a₁} {b₂ : B a₂} →
           ((a₁ , b₁) ≡ (a₂ , b₂)) ↔ Σ (a₁ ≡ a₂) (λ p → subst B p b₁ ≡ b₂)
 ≡Σ↔Σ≡ B {a₁} {a₂} {b₁} {b₂} =
   record
   { surjection = record
-    { equivalence = record
-      { to = ≡Σ⇒Σ≡ B
-      ; from = Σ≡⇒≡Σ B
-      }
+    { to               = ≡Σ⇒Σ≡ B
+    ; from             = Σ≡⇒≡Σ B
     ; right-inverse-of = right-inverse-of
     }
   ; left-inverse-of = left-inverse-of
@@ -79,7 +77,7 @@ open import Map.Bijection hiding (id; _∘_; inverse)
         pa pb
 
 ------------------------------------------------------------------------
--- A bijection between ((a₁ , b₁) ≡ (a₂ , b₂)) and
+-- A homotopy equivalence between ((a₁ , b₁) ≡ (a₂ , b₂)) and
 -- (a₁ ≡ a₂) × (b₁ ≡ b₂). I.e., non-dependent version
 
 -- Compose equalities in a Σ type
@@ -102,17 +100,15 @@ open import Map.Bijection hiding (id; _∘_; inverse)
     a≡a = cong proj₁ s≡s
     b≡b = cong proj₂ s≡s
 
--- Composition and decomposition form a bijection!
+-- Composition and decomposition form a homotopy equivalence!
 
 ≡×↔×≡ : ∀ {ℓ₁ ℓ₂} {A : Set ℓ₁} (B : Set ℓ₂) {a₁ a₂ : A} {b₁ b₂ : B} →
           ((a₁ , b₁) ≡ (a₂ , b₂)) ↔ (a₁ ≡ a₂) × (b₁ ≡ b₂)
 ≡×↔×≡ B {a₁} {a₂} {b₁} {b₂} =
   record
   { surjection = record
-    { equivalence = record
-      { to = ≡×⇒×≡
-      ; from = ×≡⇒≡×
-      }
+    { to               = ≡×⇒×≡
+    ; from             = ×≡⇒≡×
     ; right-inverse-of = right-inverse-of
     }
   ; left-inverse-of = left-inverse-of

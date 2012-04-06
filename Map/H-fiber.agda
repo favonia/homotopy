@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
--- Preimages
+-- Homotopy Fibers
 ------------------------------------------------------------------------
 
 -- Copyright (c) 2012 Favonia
@@ -9,15 +9,15 @@
 
 -- Partly based on Voevodsky's work on univalent foundations.
 
-module Map.Preimage where
+module Map.H-fiber where
 
 open import Prelude
 open import Path
 
 open import Map.Surjection hiding (id; _∘_)
-open import Map.Bijection hiding (id; _∘_)
+open import Map.H-equivalence hiding (id; _∘_)
 
--- The preimage of y under f is denoted by f ⁻¹ y.
+-- The homotopy fiber of y under f is denoted by f ⁻¹ y.
 
 infix 5 _⁻¹_
 
@@ -29,11 +29,11 @@ id⁻¹-contractible : ∀ {ℓ} {A : Set ℓ} (x : A) → Contractible (id ⁻�
 id⁻¹-contractible y = (y , refl y) , λ {(_ , p) → elim″ (λ {x} p → (y , refl y) ≡ (x , p)) (refl _) p}
 
 postulate
-  bijection⁻¹-contractible :
+  hequiv⁻¹-contractible :
     ∀ {ℓ₁ ℓ₂} {A : Set ℓ₁} {B : Set ℓ₂} (A↔B : A ↔ B) →
     let open _↔_ A↔B in ∀ y → Contractible (to ⁻¹ y)
 {-
-bijection⁻¹-contractible A↔B y =
+hequiv⁻¹-contractible A↔B y =
   (from y , right-inverse-of y) ,
   λ {(x , to-x≡y) → elim′ (λ {x} p → (from y , right-inverse-of y) ≡ (x , p)) (refl _) to-x≡y}
   where

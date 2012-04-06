@@ -17,7 +17,8 @@ open import Prelude renaming (zero to ℕzero; suc to ℕsuc)
 open import Path
 open import Path.Lemmas
 open import Path.Sum
-open import Map.Bijection hiding (_∘_; id)
+open import Path.Higher-order
+open import Map.H-equivalence hiding (_∘_; id)
 open import Map.Weak-equivalence as Weak hiding (_∘_; id)
 
 import Univalence.Lemmas; open Univalence.Lemmas univ
@@ -66,14 +67,12 @@ private
   pred-suc (neg ℕzero) = refl _
   pred-suc (neg (ℕsuc i)) = refl _
 
-  -- The non-trivial bijection between ℤ
+  -- The non-trivial homotopy equivalence between ℤ
   suc-↔ : ℤ ↔ ℤ
   suc-↔ = record
     { surjection = record
-      { equivalence = record
-        { to = suc
-        ; from = pred
-        }
+      { to = suc
+      ; from = pred
       ; right-inverse-of = suc-pred
       }
     ; left-inverse-of = pred-suc
@@ -115,7 +114,7 @@ S¹loop⇒ℤ : base ≡ base → ℤ
 S¹loop⇒ℤ p = subst C p zero
 
 ------------------------------------------------------------------------
--- Bijection
+-- Homotopy equivalence
 
 private
   -- The right inverse (easy)
@@ -188,14 +187,12 @@ private
   left-inverse-of = left-inverse-of′ base
 
 -- We have all the ingredients now!
-S¹loop↔ℤ : base ≡ base ↔ ℤ
-S¹loop↔ℤ =
+Ω₁S¹↔ℤ : Ω 1 base ↔ ℤ
+Ω₁S¹↔ℤ =
   record
   { surjection = record
-    { equivalence = record
-      { to = S¹loop⇒ℤ
-      ; from = ℤ⇒S¹loop
-      }
+    { to = S¹loop⇒ℤ
+    ; from = ℤ⇒S¹loop
     ; right-inverse-of = right-inverse-of
     }
   ; left-inverse-of = left-inverse-of

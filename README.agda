@@ -24,11 +24,8 @@ import Prelude
 ------------------------------------------------------------------------
 -- Maps, continuous functions between spaces
 
--- H-iso style equivalence
-import Map.Bijection
-
--- A record with only to & from (no proofs)
-import Map.Equivalence
+-- Homotopy equivalence
+import Map.H-equivalence
 
 -- Injections
 import Map.Injection
@@ -36,8 +33,8 @@ import Map.Injection
 -- Surjections
 import Map.Surjection
 
--- Preimage
-import Map.Preimage
+-- Homotopy Fiber
+import Map.H-fiber
 
 -- Weak-equivalent
 import Map.Weak-equivalence

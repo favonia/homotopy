@@ -57,10 +57,8 @@ private
   weq-elim⇒univ {ℓ} ≈-elim ≈-elim-id A B =
     _≈_.is-weak-equivalence $ ↔⇒≈ $ record
       { surjection = record
-        { equivalence = record
-          { to = ≡⇒≈
-          ; from = ≈⇒≡
-          }
+        { to               = ≡⇒≈
+        ; from             = ≈⇒≡
         ; right-inverse-of = right-inverse-of
         }
       ; left-inverse-of = left-inverse-of

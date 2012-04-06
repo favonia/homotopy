@@ -12,9 +12,6 @@ module Map.Surjection where
 open import Prelude as P hiding (id) renaming (_∘_ to _⊚_)
 open import Path
 
-open import Map.Equivalence as Equivalence
-  using (_⇔_; module _⇔_) renaming (_∘_ to _⊙_)
-
 ------------------------------------------------------------------------
 -- Surjections
 
@@ -24,11 +21,8 @@ infix 0 _↠_
 
 record _↠_ {f t} (From : Set f) (To : Set t) : Set (f ⊔ t) where
   field
-    equivalence : From ⇔ To
-
-  open _⇔_ equivalence
-
-  field
+    to   : From → To
+    from : To → From
     right-inverse-of : ∀ x → to (from x) ≡ x
 
   -- A lemma.
@@ -39,8 +33,6 @@ record _↠_ {f t} (From : Set f) (To : Set t) : Set (f ⊔ t) where
     to (from x)  ≡⟨ right-inverse-of x ⟩∎
     x            ∎
 
-  open _⇔_ equivalence public
-
 ------------------------------------------------------------------------
 -- Preorder
 
@@ -48,7 +40,8 @@ record _↠_ {f t} (From : Set f) (To : Set t) : Set (f ⊔ t) where
 
 id : ∀ {a} {A : Set a} → A ↠ A
 id = record
-  { equivalence      = Equivalence.id
+  { to               = P.id
+  ; from             = P.id
   ; right-inverse-of = refl
   }
 
@@ -57,7 +50,8 @@ infixr 9 _∘_
 _∘_ : ∀ {a b c} {A : Set a} {B : Set b} {C : Set c} →
       B ↠ C → A ↠ B → A ↠ C
 f ∘ g = record
-  { equivalence      = equivalence f ⊙ equivalence g
+  { to               = to f ⊚ to g
+  ; from             = from g ⊚ from f
   ; right-inverse-of = to∘from
   }
   where

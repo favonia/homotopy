@@ -15,11 +15,11 @@ module Univalence.Lemmas
 open import Prelude
 open import Path
 open import Path.Lemmas
-open import Map.Bijection hiding (_∘_; id)
+open import Map.H-equivalence hiding (_∘_; id)
 open import Map.Weak-equivalence as Weak hiding (_∘_; id)
 
 ------------------------------------------------------------------------
--- Conversions between bijections, weak equivalences, and identities
+-- Conversions between homotopy equivalences, weak equivalences, and identities
 
 ≡≈≈ : ∀ {ℓ} (A B : Set ℓ) → (A ≡ B) ≈ (A ≈ B)
 ≡≈≈ A B = weq ≡⇒≈ (univ A B)

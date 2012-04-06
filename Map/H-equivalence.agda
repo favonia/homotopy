@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
--- Bijections
+-- Homotopy equivalence
 ------------------------------------------------------------------------
 
 -- Copyright (c) 2012 Favonia
@@ -7,21 +7,16 @@
 
 {-# OPTIONS --without-K #-}
 
--- This is actually
--- (1) Homotopy isomorphism
--- (2) Homotopy equivalence
-
-module Map.Bijection where
+module Map.H-equivalence where
 
 open import Prelude as P hiding (id) renaming (_∘_ to _⊚_)
 open import Path
 
-import Map.Equivalence as Equivalence
 open import Map.Injection using (Injective; _↣_)
 open import Map.Surjection as Surjection using (_↠_; module _↠_)
 
 ------------------------------------------------------------------------
--- Bijections
+-- Homotopy equivalence
 
 infix 0 _↔_
 
@@ -71,7 +66,8 @@ id = record
 inverse : ∀ {a b} {A : Set a} {B : Set b} → A ↔ B → B ↔ A
 inverse A↔B = record
   { surjection = record
-    { equivalence      = Equivalence.inverse equivalence
+    { from         = to
+    ; to           = from
     ; right-inverse-of = left-inverse-of
     }
   ; left-inverse-of = right-inverse-of

@@ -24,7 +24,7 @@ open import Prelude
 open import Path
 open import Path.Lemmas
 open import Path.Sum
-open import Map.Bijection hiding (_∘_; id)
+open import Map.H-equivalence hiding (_∘_; id)
 open import Map.Weak-equivalence as Weak hiding (_∘_; id)
 
 import Univalence.Lemmas; open Univalence.Lemmas univ
@@ -32,7 +32,7 @@ import Univalence.Lemmas; open Univalence.Lemmas univ
 open import Space.Sphere
 
 ------------------------------------------------------------------------
--- Construction: apply S¹-elim to a non-trivial bijection in S⁰
+-- Construction: apply S¹-elim to a non-trivial homotopy equivalence in S⁰
 
 private
   not-not : ∀ x → not (not x) ≡ x
@@ -42,10 +42,8 @@ private
   not-↔ : Bool ↔ Bool
   not-↔ = record
     { surjection = record
-      { equivalence = record
-        { to = not
-        ; from = not
-        }
+      { to               = not
+      ; from             = not
       ; right-inverse-of = not-not
       }
     ; left-inverse-of = not-not
@@ -151,7 +149,7 @@ private
   halve = uncurry halve′
 
 ------------------------------------------------------------------------
--- Bijection
+-- Homotopy equivalence
 
 private
   -- This lemma is the most interesting (difficult) one!
@@ -278,10 +276,8 @@ S¹↔ΣS¹Hj : S¹ ↔ Σ S¹ Hj
 S¹↔ΣS¹Hj =
   record
   { surjection = record
-    { equivalence = record
-      { to = double
-      ; from = halve
-      }
+    { to               = double
+    ; from             = halve
     ; right-inverse-of = right-inverse-of
     }
   ; left-inverse-of = left-inverse-of

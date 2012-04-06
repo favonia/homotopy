@@ -14,15 +14,14 @@ module Map.Weak-equivalence where
 open import Prelude as P hiding (id) renaming (_∘_ to _⊚_)
 open import Path
 
-open import Map.Equivalence hiding (id; _∘_; inverse)
 open import Map.Surjection using (_↠_; module _↠_)
-open import Map.Bijection as Bijection hiding (id; _∘_; inverse)
-open import Map.Preimage as Preimage
+open import Map.H-equivalence as H-equiv hiding (id; _∘_; inverse)
+open import Map.H-fiber as H-fiber
 
 ------------------------------------------------------------------------
 -- Is-weak-equivalence
 
--- A function f is a weak equivalence if all preimages under f are
+-- A function f is a weak equivalence if all h-fibers under f are
 -- contractible.
 
 Is-weak-equivalence : ∀ {a b} {A : Set a} {B : Set b} →
@@ -56,31 +55,29 @@ record _≈_ {a b} (A : Set a) (B : Set b) : Set (a ⊔ b) where
       cong (proj₁ {B = λ x′ → to x′ ≡ to x}) $
         proj₂ (is-weak-equivalence (to x)) (x , refl (to x))
 
-  bijection : A ↔ B
-  bijection = record
+  hequivalence : A ↔ B
+  hequivalence = record
     { surjection = record
-      { equivalence = record
-        { to   = to
-        ; from = from
-        }
+      { to               = to
+      ; from             = from
       ; right-inverse-of = right-inverse-of
       }
     ; left-inverse-of = left-inverse-of
     }
 
-  open _↔_ bijection public
+  open _↔_ hequivalence public
     hiding (from; to; right-inverse-of; left-inverse-of)
 
   abstract
 
-    -- All preimages of an element under the weak equivalence are
+    -- All homotopy fibers of an element under the weak equivalence are
     -- equal.
 
     irrelevance : ∀ y (p : to ⁻¹ y) → (from y , right-inverse-of y) ≡ p
     irrelevance = proj₂ ⊚ is-weak-equivalence
 
     -- The two proofs left-inverse-of and right-inverse-of are
-    -- related.
+    -- related. (I.e., zigzag identity for adjoint equivalences.)
 
     left-right-lemma :
       ∀ x → cong to (left-inverse-of x) ≡ right-inverse-of (to x)
@@ -119,12 +116,12 @@ record _≈_ {a b} (A : Set a) (B : Set b) : Set (a ⊔ b) where
              trans (cong f (sym (refl (proj₁ f⁻¹y)))) (proj₂ f⁻¹y)    ≡⟨ refl _ ⟩∎
              trans (cong f (sym (cong pr (refl f⁻¹y)))) (proj₂ f⁻¹y)  ∎)
 
--- Bijections are weak equivalences.
+-- Homotopy equivalences are weak equivalences.
 
 ↔⇒≈ : ∀ {a b} {A : Set a} {B : Set b} → A ↔ B → A ≈ B
 ↔⇒≈ A↔B = record
   { to                  = _↔_.to A↔B
-  ; is-weak-equivalence = Preimage.bijection⁻¹-contractible A↔B
+  ; is-weak-equivalence = H-fiber.hequiv⁻¹-contractible A↔B
   }
 
 ------------------------------------------------------------------------
@@ -134,20 +131,20 @@ record _≈_ {a b} (A : Set a) (B : Set b) : Set (a ⊔ b) where
 
 -- This is subject to changes
 id : ∀ {a} {A : Set a} → A ≈ A
--- id = ↔⇒≈ Bijection.id
+-- id = ↔⇒≈ H-equiv.id
 id = record
   { to                  = P.id
-  ; is-weak-equivalence = Preimage.id⁻¹-contractible
+  ; is-weak-equivalence = H-fiber.id⁻¹-contractible
   }
 
 inverse : ∀ {a b} {A : Set a} {B : Set b} → A ≈ B → B ≈ A
-inverse = ↔⇒≈ ⊚ Bijection.inverse ⊚ _≈_.bijection
+inverse = ↔⇒≈ ⊚ H-equiv.inverse ⊚ _≈_.hequivalence
 
 infixr 9 _∘_
 
 _∘_ : ∀ {a b c} {A : Set a} {B : Set b} {C : Set c} →
       B ≈ C → A ≈ B → A ≈ C
-f ∘ g = ↔⇒≈ $ Bijection._∘_ (_≈_.bijection f) (_≈_.bijection g)
+f ∘ g = ↔⇒≈ $ H-equiv._∘_ (_≈_.hequivalence f) (_≈_.hequivalence g)
 
 -- Equational reasoning combinators.
 
