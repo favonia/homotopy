@@ -71,11 +71,20 @@ import Path.Sum
 -- (Only the interesting direction.)
 import Space.Bool-alternative
 
+-- Basic facts about Fin
+import Space.Fin.Lemmas
+
+-- Definition of free groups (work in progress)
+import Space.FreeGroup
+
 -- Definition of integers
 import Space.Integer
 
 -- Definition of intervals
 import Space.Interval
+
+-- Basic facts about Fin
+import Space.List.Lemmas
 
 -- Some basic facts about Nat
 -- (Definition of Nat is in the Prelude)
