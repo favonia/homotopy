@@ -5,12 +5,13 @@
 ------------------------------------------------------------------------
 
 -- Copyright (c) 2012 Favonia
--- released under BSD-like license (See LICENSE)
 
--- A large portion of code was shamelessly copied from Nils Anders Danielsson'
--- library released under BSD-like license (See LICENCE-Nils)
+-- A large portion of code was copied from Nils Anders Danielsson'
+-- library released under BSD-like license
 -- http://www.cse.chalmers.se/~nad/repos/equality/
 -- Copyright (c) 2011-2012 Nils Anders Danielsson
+
+-- See LICENSE for detailed copyright notice.
 
 {-# OPTIONS --without-K #-}
 
