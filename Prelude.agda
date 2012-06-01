@@ -289,6 +289,9 @@ data List {a} (A : Set a) : Set a where
 {-# BUILTIN NIL [] #-}
 {-# BUILTIN CONS _∷_ #-}
 
+[_] : ∀ {ℓ} {A : Set ℓ} → A → List A
+[_] a = a ∷ []
+
 -- Right fold.
 
 foldr : ∀ {a b} {A : Set a} {B : Set b} →
