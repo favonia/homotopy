@@ -52,3 +52,6 @@ postulate
   ext-comp[dep] : ∀ {ℓ₁ ℓ₂} {A : Set ℓ₁} {B : A → Set ℓ₂} {f g : (x : A) → B x}
              (reason : ∀ x → f x ≡ g x) →
              ∀ x → cong (λ f → f x) (ext[dep] reason) ≡ reason x
+
+unique-neq-proof : ∀ {ℓ} {A : Set ℓ} {a₁ a₂ : A} (neq₁ neq₂ : ¬ a₁ ≡ a₂) → neq₁ ≡ neq₂
+unique-neq-proof neq₁ neq₂ = ext $ ⊥-elim ∘ neq₁

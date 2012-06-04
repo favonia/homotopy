@@ -31,3 +31,11 @@ rev-rev (x ∷ xs) =
   rev (snoc (rev xs) x) ≡⟨ rev-snoc (rev xs) x ⟩
   x ∷ rev (rev xs)      ≡⟨ cong (λ l → x ∷ l) $ rev-rev xs ⟩∎
   x ∷ xs                ∎
+
+snoc-++ : ∀ {ℓ} {A : Set ℓ} l₁ (x : A) l₂ → snoc l₁ x ++ l₂ ≡ l₁ ++ x ∷ l₂
+snoc-++ [] _ _ = refl _
+snoc-++ (x ∷ xs) y ys = cong (λ zs → x ∷ zs) $ snoc-++ xs y ys
+
+++-[] : ∀ {ℓ} {A : Set ℓ} (l : List A) → l ++ [] ≡ l
+++-[] [] = refl _
+++-[] (x ∷ xs) = cong (λ xs → x ∷ xs) $ ++-[] xs
