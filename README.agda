@@ -75,7 +75,10 @@ import Space.Bool-alternative
 -- Basic facts about Fin
 import Space.Fin.Lemmas
 
--- Definition of free groups (work in progress)
+-- Definition of flowers
+import Space.Flower
+
+-- Definition of free groups
 import Space.FreeGroup
 
 -- Definition of integers
