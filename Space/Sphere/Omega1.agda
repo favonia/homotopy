@@ -10,7 +10,7 @@
 
 open import Univalence
 
-module Space.Sphere.Omega1S1-Z
+module Space.Sphere.Omega1
   (univ : ∀ {ℓ} (A B : Set ℓ) → Univalence-axiom A B) where
 
 open import Prelude renaming (zero to ℕzero; suc to ℕsuc)
@@ -19,7 +19,7 @@ open import Path.Lemmas
 open import Path.Sum
 open import Path.Higher-order
 open import Map.H-equivalence hiding (_∘_; id)
-open import Map.Weak-equivalence as Weak hiding (_∘_; id)
+open import Map.WeakEquivalence as Weak hiding (_∘_; id)
 
 import Univalence.Lemmas; open Univalence.Lemmas univ
 

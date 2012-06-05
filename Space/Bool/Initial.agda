@@ -1,12 +1,12 @@
 ------------------------------------------------------------------------
--- Alternative Axioms for Boolean
+-- Alternative axioms for Boolean
 ------------------------------------------------------------------------
 
 -- Copyright (c) 2012 Favonia
 
 -- Two equivalent ways to axiomatize Boolean
 -- with extensionality for functions:
---  (1) non-dependent elim + hom
+--  (1) non-dependent elim + being inital
 --  (2) dependent elim
 
 {-# OPTIONS --without-K #-}
@@ -18,7 +18,7 @@
 --    myself (Favonia) as an Agda exercise. The other direction
 --    should not be hard with extensionalty for functions...
 
-module Space.Bool-alternative where
+module Space.Bool.Initial where
 
 open import Prelude hiding (Bool; true; false; if_then_else_)
 open import Path

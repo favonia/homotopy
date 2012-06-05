@@ -14,7 +14,7 @@ module Univalence where
 open import Prelude
 open import Path
 open import Path.Lemmas
-open import Map.Weak-equivalence as Weak hiding (_∘_; id)
+open import Map.WeakEquivalence as Weak hiding (_∘_; id)
 
 ------------------------------------------------------------------------
 -- The univalence axiom

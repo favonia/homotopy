@@ -37,8 +37,8 @@ import Map.Surjection
 -- Homotopy Fiber
 import Map.H-fiber
 
--- Weak-equivalent
-import Map.Weak-equivalence
+-- Weak equivalent
+import Map.WeakEquivalence
 
 ------------------------------------------------------------------------
 -- Paths (propositional equalities in type theories)
@@ -70,7 +70,7 @@ import Path.Sum
 -- Kristina's theorem: hom is contractable iff we have a dependent
 -- eliminator.
 -- (Only the interesting direction.)
-import Space.Bool-alternative
+import Space.Bool.Initial
 
 -- Basic facts about Fin
 import Space.Fin.Lemmas
@@ -98,14 +98,14 @@ import Space.Nat.Lemmas
 import Space.Sphere
 
 -- Alternative definition of spheres (two-point)
-import Space.Sphere-alternative
+import Space.Sphere.TwoPoints
 
 -- Definition of the Hopf junior (S₀ ↪ S₁ → S₁)
 -- and a proof that the total space is indeed S₁
 import Space.Sphere.Hopf-junior
 
 -- A proof that Ω₁(S₁) is ℤ
-import Space.Sphere.Omega1S1-Z
+import Space.Sphere.Omega1
 
 -- Definition of torus
 --import Space.Torus

@@ -25,7 +25,7 @@ open import Path
 open import Path.Lemmas
 open import Path.Sum
 open import Map.H-equivalence hiding (_∘_; id)
-open import Map.Weak-equivalence as Weak hiding (_∘_; id)
+open import Map.WeakEquivalence as Weak hiding (_∘_; id)
 
 import Univalence.Lemmas; open Univalence.Lemmas univ
 

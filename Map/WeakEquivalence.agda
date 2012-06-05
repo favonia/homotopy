@@ -9,7 +9,7 @@
 
 -- Partly based on Voevodsky's work on univalent foundations.
 
-module Map.Weak-equivalence where
+module Map.WeakEquivalence where
 
 open import Prelude as P hiding (id) renaming (_∘_ to _⊚_)
 open import Path

@@ -8,7 +8,7 @@
 
 {-# OPTIONS --without-K #-}
 
-module Space.Sphere-alternative where
+module Space.Sphere.TwoPoints where
 
 open import Prelude
 open import Path
