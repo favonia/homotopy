@@ -55,8 +55,8 @@ data Normalized {n} : Word n → Set where
               Normalized (x₂ ∷ xs) →
               Normalized (x₁ ∷ x₂ ∷ xs)
 
-Free : ℕ → Set
-Free n = Σ (Word n) Normalized
+FreeGroup : ℕ → Set
+FreeGroup n = Σ (Word n) Normalized
 
 private
   ------------------------------------------------------------------------
@@ -329,10 +329,10 @@ private
 ------------------------------------------------------------------------
 -- the public interface for a group
 
-unit : ∀ {n} → Free n
+unit : ∀ {n} → FreeGroup n
 unit = [] , empty
 
-_∘_ : ∀ {n} → Free n → Free n → Free n
+_∘_ : ∀ {n} → FreeGroup n → FreeGroup n → FreeGroup n
 (xs₁ , n₁) ∘ (xs₂ , n₂) = word-append-reduce xs₁ xs₂ , norm-append-reduce xs₁ n₂
 
 private 
@@ -348,25 +348,25 @@ private
   unique-normalized-proof (cons s₁ n₁) (cons s₂ n₂) =
     cong₂ cons (unique-stable-proof s₁ s₂) (unique-normalized-proof n₁ n₂)
 
-  word-eq⇒free-eq : ∀ {n} {f₁ f₂ : Free n} → proj₁ f₁ ≡ proj₁ f₂ → f₁ ≡ f₂
+  word-eq⇒free-eq : ∀ {n} {f₁ f₂ : FreeGroup n} → proj₁ f₁ ≡ proj₁ f₂ → f₁ ≡ f₂
   word-eq⇒free-eq {f₁ = xs₁ , n₁} {f₂ = xs₂ , n₂} eq =
     Σ≡⇒≡Σ Normalized $ eq , unique-normalized-proof (subst Normalized eq n₁) n₂
 
-∘-unitˡ : ∀ {n} (f : Free n) → unit ∘ f ≡ f
+∘-unitˡ : ∀ {n} (f : FreeGroup n) → unit ∘ f ≡ f
 ∘-unitˡ _ = refl _
 
-∘-unitʳ : ∀ {n} (f : Free n) → f ∘ unit ≡ f
+∘-unitʳ : ∀ {n} (f : FreeGroup n) → f ∘ unit ≡ f
 ∘-unitʳ (_ , n) = word-eq⇒free-eq $ word-append-reduce-[] n
 
-∘-assoc : ∀ {n} (f₁ f₂ f₃ : Free n) → (f₁ ∘ f₂) ∘ f₃ ≡ f₁ ∘ (f₂ ∘ f₃)
+∘-assoc : ∀ {n} (f₁ f₂ f₃ : FreeGroup n) → (f₁ ∘ f₂) ∘ f₃ ≡ f₁ ∘ (f₂ ∘ f₃)
 ∘-assoc (xs₁ , _) (xs₂ , _) (_ , n₃) =
   word-eq⇒free-eq $ word-append-reduce-assoc xs₁ xs₂ n₃
 
-_⁻¹ : ∀ {n} → Free n → Free n
+_⁻¹ : ∀ {n} → FreeGroup n → FreeGroup n
 (xs , n) ⁻¹ = word-inverse xs , norm-inverse n
 
-∘-invˡ : ∀ {n} (f : Free n) → (f ⁻¹) ∘ f ≡ unit
+∘-invˡ : ∀ {n} (f : FreeGroup n) → (f ⁻¹) ∘ f ≡ unit
 ∘-invˡ (xs , _) = word-eq⇒free-eq $ word-inverse-append-reduce xs
 
-∘-invʳ : ∀ {n} (f : Free n) → f ∘ (f ⁻¹) ≡ unit
+∘-invʳ : ∀ {n} (f : FreeGroup n) → f ∘ (f ⁻¹) ≡ unit
 ∘-invʳ (xs , _) = word-eq⇒free-eq $ word-append-reduce-inverse xs
