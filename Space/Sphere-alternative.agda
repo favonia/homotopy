@@ -65,13 +65,13 @@ S′¹-elim[simp] {P = P} pn ps pn¹ ps¹ = S′¹-elim (const P) pn ps (trans b
     boring-n¹ = subst-const north¹ ps
     boring-s¹ = subst-const south¹ pn
 
--- This propositional equality is derivable from the dependent version.
+-- TODO This rule should be derived from the dependent elimination rule
 postulate
   S′¹-elim[simp]-north¹ : ∀ {ℓ} {P : Set ℓ} (pnorth⁰ psouth⁰ : P)
                           (pnorth¹ : psouth⁰ ≡ pnorth⁰)
                           (psouth¹ : pnorth⁰ ≡ psouth⁰) →
                           cong (S′¹-elim[simp] pnorth⁰ psouth⁰ pnorth¹ psouth¹) north¹ ≡ pnorth¹
-  S′¹-elim[simp]-south¹ : ∀ {ℓ} {P : Set ℓ} (pnorth⁰ psouth⁰ : P) →
+  S′¹-elim[simp]-south¹ : ∀ {ℓ} {P : Set ℓ} (pnorth⁰ psouth⁰ : P)
                           (pnorth¹ : psouth⁰ ≡ pnorth⁰)
                           (psouth¹ : pnorth⁰ ≡ psouth⁰) →
                           cong (S′¹-elim[simp] pnorth⁰ psouth⁰ pnorth¹ psouth¹) south¹ ≡ psouth¹

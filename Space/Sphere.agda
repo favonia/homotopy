@@ -36,8 +36,6 @@ base¹ = base¹′
 base : S¹
 base = base¹
 
--- Agda seems to think loop and refl are NOT definitionally equal
--- outside of this abstract block
 postulate
   loop¹ : base¹ ≡ base¹
 
