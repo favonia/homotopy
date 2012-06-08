@@ -49,6 +49,10 @@ import Path
 -- Some really basic lemmas for equivalence of paths
 import Path.Lemmas
 
+-- Fancy Unicode symbols for writing incomprehensible proofs
+-- (Subjecting to changes.)
+import Path.Symbol
+
 -- Higher-order paths and loops
 import Path.HigherOrder
 
@@ -111,7 +115,7 @@ import Space.Sphere.HopfJunior
 import Space.Sphere.Omega1
 
 -- Definition of torus
---import Space.Torus
+import Space.Torus
 
 ------------------------------------------------------------------------
 -- The Univalence axiom
