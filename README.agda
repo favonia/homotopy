@@ -78,6 +78,9 @@ import Space.Fin.Lemmas
 -- Definition of flowers
 import Space.Flower
 
+-- A proof that Ω₁(Flower) is FreeGroup
+import Space.Flower
+
 -- Definition of free groups
 import Space.FreeGroup
 

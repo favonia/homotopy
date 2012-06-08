@@ -7,25 +7,28 @@ open import Path.Lemmas
 
 private
   data Flower′ (n : ℕ) : Set where
-    core : Flower′ n
+    core′ : Flower′ n
 
 Flower : ℕ → Set
 Flower n = Flower′ n
 
+core : ∀ n → Flower n
+core n = core′
+
 -- Dependent version
 
 postulate
-  petal : ∀ {n} → Fin n → _≡_ {A = Flower n} core core
+  petal : ∀ {n} → Fin n → core n ≡ core n
 
 Flower-elim : ∀ {ℓ} {n} (P : Flower n → Set ℓ)
-                (pcore : P core)
+                (pcore : P (core n))
                 (ppetal : ∀ i → subst P (petal i) pcore ≡ pcore) →
               ∀ f → P f
-Flower-elim _ pcore _ core = pcore
+Flower-elim _ pcore _ core′ = pcore
 
 postulate
   Flower-elim-petal : ∀ {ℓ} {n} (P : Flower n → Set ℓ)
-                        (pcore : P core)
+                        (pcore : P (core n))
                         (ppetal : ∀ i → subst P (petal i) pcore ≡ pcore) →
                       ∀ i → cong[dep] P (Flower-elim P pcore ppetal) (petal i) ≡ ppetal i
 
