@@ -4,7 +4,7 @@
 
 -- Copyright (c) 2012 Favonia
 
-module Path.Higher-order where
+module Path.HigherOrder where
 
 open import Prelude
 open import Path

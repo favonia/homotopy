@@ -50,7 +50,7 @@ import Path
 import Path.Lemmas
 
 -- Higher-order paths and loops
-import Path.Higher-order
+import Path.HigherOrder
 
 -- A short proof that Ω₂(A) is abelian for any space A
 import Path.Omega2-abelian
@@ -102,7 +102,7 @@ import Space.Sphere.TwoPoints
 
 -- Definition of the Hopf junior (S₀ ↪ S₁ → S₁)
 -- and a proof that the total space is indeed S₁
-import Space.Sphere.Hopf-junior
+import Space.Sphere.HopfJunior
 
 -- A proof that Ω₁(S₁) is ℤ
 import Space.Sphere.Omega1

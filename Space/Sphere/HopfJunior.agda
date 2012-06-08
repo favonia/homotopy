@@ -17,7 +17,7 @@
 
 open import Univalence
 
-module Space.Sphere.Hopf-junior
+module Space.Sphere.HopfJunior
   (univ : ∀ {ℓ} (A B : Set ℓ) → Univalence-axiom A B) where
 
 open import Prelude

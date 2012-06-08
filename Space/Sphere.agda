@@ -14,7 +14,7 @@ open import Prelude
 open import Path
 open import Path.Lemmas
 open import Path.Sum
-open import Path.Higher-order
+open import Path.HigherOrder
 
 ------------------------------------------------------------------------
 -- Safe area: S¹ only

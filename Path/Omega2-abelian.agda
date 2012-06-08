@@ -23,7 +23,7 @@ module Path.Omega2-abelian {ℓ} {A : Set ℓ} (base : A) where
 open import Prelude hiding (_∘_)
 open import Path
 open import Path.Lemmas
-open import Path.Higher-order
+open import Path.HigherOrder
 
 private
   lemma₁ : ∀ (p : Ω 2 base) → cong (λ p′ → trans p′ (refl base)) p ≡ p

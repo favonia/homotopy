@@ -17,7 +17,7 @@ open import Prelude renaming (zero to ℕzero; suc to ℕsuc)
 open import Path
 open import Path.Lemmas
 open import Path.Sum
-open import Path.Higher-order
+open import Path.HigherOrder
 open import Map.H-equivalence hiding (_∘_; id)
 open import Map.WeakEquivalence as Weak hiding (_∘_; id)
 
