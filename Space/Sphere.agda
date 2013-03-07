@@ -304,3 +304,23 @@ private
     test₂ : ∀ {ℓ} (P : Set ℓ) (pbase : P) →
             Path⇑ 2 (S-endpoints⇑ 2 pbase) ≡ (refl pbase ≡ refl pbase)
     test₂ _ _ = refl _
+
+  -- Test cases for the type of the LHS of "Sⁿ-elim-loop[simp]"
+  module Test₅ where
+    test₀ : ∀ {ℓ} (P : Set ℓ) (pbase : P) (ploop : Path⇑ 0 (S-endpoints⇑ 0 pbase)) →
+            subst (Path⇑ 0) (lemma₃ 0 (Sⁿ-elim[simp] 0 pbase ploop) (baseⁿ 0))
+                (cong⇑ 0 (Sⁿ-elim[simp] 0 pbase ploop) (Sⁿ-endpoints 0) (loopⁿ 0))
+            ≡ (Sⁿ-elim[simp] 0 pbase ploop) (loopⁿ 0)
+    test₀ _ _ _ = refl _
+
+    test₁ : ∀ {ℓ} (P : Set ℓ) (pbase : P) (ploop : Path⇑ 1 (S-endpoints⇑ 1 pbase)) →
+            subst (Path⇑ 1) (lemma₃ 1 (Sⁿ-elim[simp] 1 pbase ploop) (baseⁿ 1))
+                (cong⇑ 1 (Sⁿ-elim[simp] 1 pbase ploop) (Sⁿ-endpoints 1) (loopⁿ 1))
+            ≡ cong (Sⁿ-elim[simp] 1 pbase ploop) (loopⁿ 1)
+    test₁ _ _ _ = refl _
+
+    test₂ : ∀ {ℓ} (P : Set ℓ) (pbase : P) (ploop : Path⇑ 2 (S-endpoints⇑ 2 pbase)) →
+            subst (Path⇑ 2) (lemma₃ 2 (Sⁿ-elim[simp] 2 pbase ploop) (baseⁿ 2))
+                (cong⇑ 2 (Sⁿ-elim[simp] 2 pbase ploop) (Sⁿ-endpoints 2) (loopⁿ 2))
+            ≡ cong (cong (Sⁿ-elim[simp] 2 pbase ploop)) (loopⁿ 2)
+    test₂ _ _ _ = refl _
