@@ -54,7 +54,8 @@ Flower-elim[simp]-petal {n = n} {P = P} pcore ppetal i =
   trans (sym $ boring-petal i) (trans (boring-petal i) $ cong pflower $ petal i)
     ≡⟨ cong (trans $ sym $ boring-petal i) $ sym $ cong[dep]-const pflower (petal i) ⟩
   trans (sym $ boring-petal i) (cong[dep] (const P) pflower $ petal i)
-    ≡⟨ cong (trans $ sym $ boring-petal i) $ Flower-elim-petal (const P) _ _ i ⟩
+    ≡⟨ cong (trans $ sym $ boring-petal i) $
+        Flower-elim-petal (const P) pcore (λ i → trans (boring-petal i) (ppetal i)) i ⟩
   trans (sym $ boring-petal i) (trans (boring-petal i) $ ppetal i)
     ≡⟨ trans-sym-trans (boring-petal i) _ ⟩∎
   ppetal i

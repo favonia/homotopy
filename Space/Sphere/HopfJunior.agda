@@ -196,7 +196,7 @@ private
       lemma₃ : line₃ ≡ trans line₃′|₁ line₃′|₂
       lemma₃ =
         line₃
-            ≡⟨ cong (cong (λ f → f false)) $ S¹-elim-loop (λ x → Hj x → S¹) halve′-base _ ⟩
+            ≡⟨ cong (cong (λ f → f false)) $ S¹-elim-loop (λ x → Hj x → S¹) halve′-base (trans halve′-boring-loop halve′-loop) ⟩
         cong (λ f → f false) (trans halve′-boring-loop halve′-loop)
             ≡⟨ cong-trans (λ f → f false) halve′-boring-loop halve′-loop ⟩
         trans (cong (λ f → f false) halve′-boring-loop) (cong (λ f → f false) halve′-loop)
@@ -243,7 +243,7 @@ private
       lemma₃ : line₃ ≡ trans line₃′|₁ (trans line₃′|₂ loop)
       lemma₃ =
         line₃
-            ≡⟨ cong (cong (λ f → f true)) $ S¹-elim-loop (λ x → Hj x → S¹) halve′-base _ ⟩
+            ≡⟨ cong (cong (λ f → f true)) $ S¹-elim-loop (λ x → Hj x → S¹) halve′-base (trans halve′-boring-loop halve′-loop) ⟩
         cong (λ f → f true) (trans halve′-boring-loop halve′-loop)
             ≡⟨ cong-trans (λ f → f true) halve′-boring-loop halve′-loop ⟩
         trans (cong (λ f → f true) halve′-boring-loop) (cong (λ f → f true) halve′-loop)
