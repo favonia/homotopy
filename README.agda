@@ -82,11 +82,11 @@ import Space.Fin.Lemmas
 -- Definition of flowers
 import Space.Flower
 
--- A proof that Ω₁(Flower) is FreeGroup
-import Space.Flower
+-- A proof that Ω₁(Flower) is FreeGroup (currently broken)
+-- import Space.Flower.Omega1
 
--- Definition of free groups
-import Space.FreeGroup
+-- Definition of free groups (currently broken)
+-- import Space.FreeGroup
 
 -- Definition of integers
 import Space.Integer
