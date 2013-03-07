@@ -62,7 +62,7 @@ Path[dep]⇑ : ∀ {ℓ₁ ℓ₂} n {A : Set ℓ₁} (B : A → Set ℓ₂) {eA
 
 Endpoints[dep]⇑ {ℓ₁} {ℓ₂} 0       _ _            = ↑ ℓ₂ ⊤
 Endpoints[dep]⇑           (suc n) B (eA , x , y) = Σ (Endpoints[dep]⇑ n B eA)
-                                                    (λ c → Path[dep]⇑ n B x c × Path[dep]⇑ n B y c)
+                                                     (λ c → Path[dep]⇑ n B x c × Path[dep]⇑ n B y c)
 
 Path[dep]⇑ 0       B a _              = B a
 Path[dep]⇑ (suc n) B a (eB , bx , by) = subst (λ x → Path[dep]⇑ n B x eB) a bx ≡ by
