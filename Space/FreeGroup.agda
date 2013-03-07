@@ -27,6 +27,10 @@ data Alphabet (n : ℕ) : Set where
   gen : Fin n → Alphabet n
   inv : Fin n → Alphabet n
 
+alphabet-flip : ∀ {n} → Alphabet n → Alphabet n
+alphabet-flip (gen x) = inv x
+alphabet-flip (inv x) = gen x
+
 Word : ℕ → Set
 Word n = List (Alphabet n)
 
@@ -34,17 +38,21 @@ Word n = List (Alphabet n)
 data Stable {n} : Alphabet n → Alphabet n → Set where
   gen-gen : ∀ {x y} → Stable (gen x) (gen y)
   inv-inv : ∀ {x y} → Stable (inv x) (inv y)
-  gen-inv : ∀ {x y} → ¬ x ≡ y → Stable (gen x) (inv y)
-  inv-gen : ∀ {x y} → ¬ x ≡ y → Stable (inv x) (gen y)
+  gen-inv : ∀ {x y} → x <> y → Stable (gen x) (inv y)
+  inv-gen : ∀ {x y} → x <> y → Stable (inv x) (gen y)
 
-decideStable : ∀ {n} (x y : Alphabet n) → Dec (Stable x y)
+data Unstable {n} : Alphabet n → Alphabet n → Set where
+  gen-inv : ∀ {x} → Unstable (gen x) (inv x)
+  inv-gen : ∀ {x} → Unstable (inv x) (gen x)
+
+decideStable : ∀ {n} (x y : Alphabet n) → Stable x y ⊎ Unstable x y
 decideStable (gen x) (gen y) = inj₁ gen-gen
 decideStable (inv x) (inv y) = inj₁ inv-inv
-decideStable {n} (gen x) (inv y) with F.decide-≡ x y
-... | inj₁ eq  = inj₂ λ{(gen-inv neq) → neq eq}
+decideStable {n} (gen x) (inv y) with F.decide-≡' x y
+... | inj₁ eq  = inj₂ $ subst (λ y → Unstable (gen x) (inv y)) eq gen-inv
 ... | inj₂ neq = inj₁ $ gen-inv neq
-decideStable {n} (inv x) (gen y) with F.decide-≡ x y
-... | inj₁ eq  = inj₂ λ{(inv-gen neq) → neq eq}
+decideStable {n} (inv x) (gen y) with F.decide-≡' x y
+... | inj₁ eq  = inj₂ $ subst (λ y → Unstable (inv x) (gen y)) eq inv-gen
 ... | inj₂ neq = inj₁ $ inv-gen neq
 
 -- Positive definition (following Dan Licata's advice)
@@ -64,31 +72,20 @@ FreeGroup n = Σ (Word n) Normalized
 stable-sym : ∀ {n} {x y : Alphabet n} → Stable x y → Stable y x
 stable-sym gen-gen = gen-gen
 stable-sym inv-inv = inv-inv
-stable-sym (gen-inv neq) = inv-gen $ neq ⊙ sym
-stable-sym (inv-gen neq) = gen-inv $ neq ⊙ sym
+stable-sym (gen-inv neq) = inv-gen $ <>-sym neq
+stable-sym (inv-gen neq) = gen-inv $ <>-sym neq
 
 private
-  -- Negative definition
-  data Unstable {n} : Alphabet n → Alphabet n → Set where
-    gen-inv : ∀ {x} → Unstable (gen x) (inv x)
-    inv-gen : ∀ {x} → Unstable (inv x) (gen x)
+  unstable⇒flip : ∀ {n} {x y z : Alphabet n} → Unstable x y → x ≡ alphabet-flip y
+  unstable⇒flip gen-inv = refl _
+  unstable⇒flip inv-gen = refl _
 
-  ¬stable⇒unstable : ∀ {n} {x y : Alphabet n} → ¬ Stable x y → Unstable x y
-  ¬stable⇒unstable {x = gen x} {y = inv y} ns with F.decide-≡ x y
-  ... | inj₁ eq = subst (λ y → Unstable (gen x) (inv y)) eq gen-inv
-  ... | inj₂ ne = ⊥-elim $ ns $ gen-inv ne
-  ¬stable⇒unstable {x = inv x} {y = gen y} ns with F.decide-≡ x y
-  ... | inj₁ eq = subst (λ y → Unstable (inv x) (gen y)) eq inv-gen
-  ... | inj₂ ne = ⊥-elim $ ns $ inv-gen ne
-  ¬stable⇒unstable {x = gen x} {y = gen y} ns = ⊥-elim $ ns gen-gen
-  ¬stable⇒unstable {x = inv x} {y = inv y} ns = ⊥-elim $ ns inv-inv
+  unstable-sym : ∀ {n} {x y : Alphabet n} → Unstable x y → Unstable y x
+  unstable-sym gen-inv = inv-gen
+  unstable-sym inv-gen = gen-inv
 
-  unstable-involutive : ∀ {n} {x y z : Alphabet n} → Unstable x y → Unstable y z → x ≡ z
-  unstable-involutive gen-inv inv-gen = refl _
-  unstable-involutive inv-gen gen-inv = refl _
-
-¬stable-involutive : ∀ {n} {x y z : Alphabet n} → ¬ Stable x y → ¬ Stable y z → x ≡ z
-¬stable-involutive ns₁ ns₂ = unstable-involutive (¬stable⇒unstable ns₁) (¬stable⇒unstable ns₂)
+  unstable-involutive : ∀ {n} {x y y' z : Alphabet n} → Unstable x y → Unstable y z → x ≡ z
+  unstable-involutive us₁ us₂ = trans (unstable⇒flip us₁) (sym $ unstable⇒flip $ unstable-sym us₂)
 
 ------------------------------------------------------------------------
 -- head, tail, cons
@@ -100,14 +97,14 @@ private
     left  : ∀ {xs} → HeadStable xs []
     right : ∀ {xs} → HeadStable [] xs
 
-  norm-head : ∀ {n} {x} {xs : Word n} →
-                Normalized (x ∷ xs) → ∀ ys → HeadStable xs (x ∷ ys)
-  norm-head ✭       _ = right
-  norm-head (s ▸ _) _ = heads $ stable-sym s
+  norm-head : ∀ {n} {x} {xs xxs : Word n} → xxs ≡ x ∷ xs →
+                Normalized xxs → ∀ ys → HeadStable xs (x ∷ ys)
+  norm-head _ ✭       _ = right
+  norm-head _ (s ▸ _) _ = heads $ stable-sym s
 
   norm-tail : ∀ {n} {x} {xs : Word n} →
                 Normalized (x ∷ xs) → Normalized xs
-  norm-tail ✭       = ∅
+  norm-tail (✭ _)   = ∅
   norm-tail (_ ▸ n) = n
 
   norm-cons : ∀ {n} {x} {xs ys : Word n} → HeadStable (x ∷ xs) ys → Normalized ys →
@@ -131,7 +128,7 @@ private
   norm-head-reduce x {y ∷ _} n with decideStable x y
   ... | inj₁ s = s ▸ n
   ... | inj₂ _ = norm-tail n
-  
+
   word-head-reduce-¬stable : ∀ {n} {x y : Alphabet n} → ¬ Stable x y →
                              ∀ {ys} → word-head-reduce x (y ∷ ys) ≡ ys
   word-head-reduce-¬stable {x = x} {y} ¬s with decideStable x y
@@ -145,7 +142,7 @@ private
   ... | inj₁ s = ⊥-elim $ nsxy s
   ... | inj₂ _ = refl _
   word-head-reduce₂-¬stable {x = x} {y} nsxy {z ∷ []} ✭ with decideStable y z
-  ... | inj₂ nsyz = cong [_] $ ¬stable-involutive nsxy nsyz
+  ... | inj₂ nsyz = cong [_] $ unstable-involutive nsxy nsyz
   ... | inj₁ _ with decideStable x y
   ...   | inj₁ s = ⊥-elim $ nsxy s
   ...   | inj₂ _ = refl _
@@ -154,8 +151,8 @@ private
   ...   | inj₁ sxy = ⊥-elim $ nsxy sxy
   ...   | inj₂ _   = refl _
   word-head-reduce₂-¬stable {x = x} {y} nsxy {z₁ ∷ z₂ ∷ zs} (s ▸ _) | inj₂ u with decideStable x z₂
-  ...   | inj₁ _  = cong (λ x → x ∷ z₂ ∷ zs) $ ¬stable-involutive nsxy u
-  ...   | inj₂ u₂ = ⊥-elim $ subst (λ x → ¬ Stable x z₂) (¬stable-involutive nsxy u) u₂ s
+  ...   | inj₁ _  = cong (λ x → x ∷ z₂ ∷ zs) $ unstable-involutive nsxy u
+  ...   | inj₂ u₂ = ⊥-elim $ subst (λ x → ¬ Stable x z₂) (unstable-involutive nsxy u) u₂ s
 
   word-head-reduce₂-stable : ∀ {n} x₁ x₂ (xs : Word n) → Stable x₁ x₂ →
                           word-head-reduce x₁ (x₂ ∷ xs) ≡ x₁ ∷ x₂ ∷ xs
@@ -236,10 +233,6 @@ private
 ------------------------------------------------------------------------
 -- flip
 
-  alphabet-flip : ∀ {n} → Alphabet n → Alphabet n
-  alphabet-flip (gen x) = inv x
-  alphabet-flip (inv x) = gen x
-
   alphabet-flip-flip : ∀ {n} (x : Alphabet n) → alphabet-flip (alphabet-flip x) ≡ x
   alphabet-flip-flip (gen x) = refl _
   alphabet-flip-flip (inv x) = refl _
@@ -294,14 +287,9 @@ private
     where
       ¬stable-gen-inv : ∀ {n} {i j : Fin n} → i ≡ j → ¬ Stable (gen i) (inv j)
       ¬stable-gen-inv eq (gen-inv neq) = neq eq
-  
+
   ¬stable-flipʳ : ∀ {n} (x : Alphabet n) → ¬ Stable x (alphabet-flip x)
   ¬stable-flipʳ x = ¬stable-flipˡ x ⊙ stable-sym
-  
-¬stable⇒flip : ∀ {n} {x y : Alphabet n} → ¬ Stable x y → y ≡ alphabet-flip x
-¬stable⇒flip ¬s with ¬stable⇒unstable ¬s
-... | gen-inv = refl _
-... | inv-gen = refl _
 
 ------------------------------------------------------------------------
 -- inverse
@@ -320,7 +308,7 @@ private
       ≡⟨ word-flip-flip xs ⟩∎
     xs
       ∎
-  
+
   norm-inverse : ∀ {n} {xs : Word n} → Normalized xs → Normalized (word-inverse xs)
   norm-inverse n = norm-rev $ norm-flip n
 
@@ -363,7 +351,7 @@ unit = [] , ∅
 _∘_ : ∀ {n} → FreeGroup n → FreeGroup n → FreeGroup n
 (xs₁ , n₁) ∘ (xs₂ , n₂) = word-append-reduce xs₁ xs₂ , norm-append-reduce xs₁ n₂
 
-private 
+private
   unique-stable-proof : ∀ {n} {x y : Alphabet n} (s₁ s₂ : Stable x y) → s₁ ≡ s₂
   unique-stable-proof gen-gen        gen-gen        = refl _
   unique-stable-proof inv-inv        inv-inv        = refl _
