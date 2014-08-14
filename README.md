@@ -7,6 +7,14 @@ type theory and category theory.
 For more information about this theory
 I recommend [this blog](http://homotopytypetheory.org).
 
+# Acknowledgment
+
+This material is partially based upon work supported by the
+National Science Foundation under Grant Number 1116703. Any
+opinions, findings, and conclusions or recommendations expressed
+in this material are those of the author(s) and do not necessarily
+reflect the views of the National Science Foundation.
+
 # Copyright
 
 See `LICENSE.md` for more information.
